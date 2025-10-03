@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+/* your custom tokens/helpers */
+:root{
+  --coffee:#5C4033;
+  --pumpkin:#E87024;
+  --cream:#F3E5D8;
+  --sage:#8CA78B;
+  --peach:#F7E1CF;
+}
+body { font-family: "Lora", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif; }
