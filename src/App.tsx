@@ -92,9 +92,13 @@ const DriveThruStatus: React.FC = () => {
       const day = now.getDay(); // 0 Sun - 6 Sat
       const mins = now.getHours()*60 + now.getMinutes();
       let open = false;
-      if (day >= 1 && day <= 5) open = mins >= 7*60 && mins < 16*60;
-      else if (day === 6) open = mins >= 8*60 && mins < 16*60;
-      else open = mins >= 8*60 && mins < 14*60;
+     // Mon–Fri: 06:00–18:00  |  Sat–Sun: 09:00–15:00
+      if (day >= 1 && day <= 5) {
+       open = mins >= 6 * 60 && mins < 18 * 60;
+       } else {
+       open = mins >= 9 * 60 && mins < 15 * 60;
+      }
+
       setLabel(open ? "Open now" : "Closed — see hours");
     };
     update();
@@ -380,9 +384,8 @@ const Visit: React.FC = () => (
               <div>
                 <p className="font-semibold">Opening Hours</p>
                 <ul className="mt-2 grid grid-cols-2 gap-y-1 text-sm text-neutral-700">
-                  <li>Mon–Fri</li><li>7:00 – 16:00</li>
-                  <li>Sat</li><li>8:00 – 16:00</li>
-                  <li>Sun</li><li>8:00 – 14:00</li>
+                  <li>Mon–Fri</li><li>06:00 AM – 06:00 PM</li>
+                  <li>Sat-Sun</li><li>09:00 AM – 03:00 PM</li>
                 </ul>
               </div>
             </div>
