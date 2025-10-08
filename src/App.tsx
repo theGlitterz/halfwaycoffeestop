@@ -237,7 +237,7 @@ const HowToHalfwaySection: React.FC = () => {
                 {checkpoints.map((c, i) => (
                   <div
                     key={c.id}
-                    ref={(el) => (markerRefs.current[i] = el)}
+                    ref={(el) => { markerRefs.current[i] = el; }}
                     className="text-neutral-900 text-center select-none"
                   >
                     <div
