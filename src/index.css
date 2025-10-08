@@ -7,5 +7,15 @@
   --cream:#F3E5D8;
   --sage:#8CA78B;
   --peach:#F7E1CF;
+  --font-heading: 'PT Serif', serif;
+  --font-body: 'Poppins', sans-serif;
 }
-body { font-family: "Lora", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif; }
+body {
+  font-family: var(--font-body);
+}
+
+/* Headings use PT Serif */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+}
