@@ -166,7 +166,7 @@ const HowToHalfwaySection: React.FC = () => {
   const checkpoints = [
     { id: "A", label: "Pull In",  title: "Pull in to the lane", desc: "Follow the arrows and roll up to the window." },
     { id: "B", label: "Order",    title: "Say hi & order",      desc: "Order your drink and we start brewing." },
-    { id: "C", label: "Roll Out", title: "Grab & go",            desc: "Fresh cup in hand—you’re back on the road." },
+    { id: "C", label: "Roll Out", title: "Grab & go",            desc: "Collect your fresh cup—hit the road!" },
   ];
 
   const [idx, setIdx] = useState(0);
