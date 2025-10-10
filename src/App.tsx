@@ -6,6 +6,8 @@ import {
   Download, Phone, Mail, ChevronRight, ChevronLeft
 } from "lucide-react";
 import { Routes, Route, Link } from "react-router-dom";
+import HalfwayLogo from "./assets/halfway-logo.png";
+
 
 /* ================= Brand tokens ================= */
 const brand = {
@@ -47,15 +49,28 @@ const Nav: React.FC = () => {
     { href: "#visit", label: "Visit" },
   ];
   return (
-    <nav className="fixed top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-white/50 bg-white/70 border-b border-black/5">
+    // <nav className="fixed top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-white/50 bg-white/70 border-b border-black/5">
+<nav className="fixed top-0 z-50 w-full border-b border-black/5 bg-[#6d4b40] backdrop-blur-sm">
       <Container className="flex h-16 items-center justify-between">
-        <a href="#home" className="flex items-center gap-2">
-          <Coffee className="h-6 w-6" style={{ color: brand.pumpkin }} />
-          <span className="font-bold tracking-wide" style={{ color: brand.coffee }}>Halfway Coffee Stop</span>
-        </a>
+       <a
+  href="#home"
+  className="flex h-16 items-center gap-2 shrink-0"   // full bar height
+  aria-label="Halfway Coffee Stop"
+>
+  <img
+    src={HalfwayLogo}
+    alt="Halfway Coffee Stop"
+    width={1702}
+    height={1322}
+    className="block h-full max-h-[60px] w-auto object-contain " // fill height, leave 2px breathing room
+  />
+  <span className="sr-only">Halfway Coffee Stop</span>
+</a>
+
+
         <div className="hidden md:flex items-center gap-6">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="text-sm font-medium text-neutral-700 hover:text-neutral-900">{l.label}</a>
+            <a key={l.href} href={l.href} className="text-sm font-medium text-[#F3E5D8] hover:text-[#E87024] transition-colors">{l.label}</a>
           ))}
           <a href="#menu" className="rounded-full px-4 py-2 text-sm font-semibold text-white" style={{ backgroundColor: brand.pumpkin }}>
             Order Ahead
