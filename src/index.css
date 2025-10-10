@@ -19,3 +19,13 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 700;
 }
+/* Stop accidental horizontal scroll on the whole site */
+html, body, #root {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Avoid bounce/chain on sideways gestures */
+html, body {
+  overscroll-behavior-x: none;
+}

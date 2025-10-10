@@ -175,6 +175,7 @@ const HowToHalfwaySection: React.FC = () => {
   const trackRef = React.useRef<HTMLDivElement | null>(null);
   const markerRefs = React.useRef<(HTMLDivElement | null)[]>([]);
 
+
   // Animate A → B → C → restart
   useEffect(() => {
     const t = setInterval(() => setIdx(v => (v < 2 ? v + 1 : 0)), 1500);
@@ -743,7 +744,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white text-neutral-900">
+    <div className="min-h-screen bg-white text-neutral-900 overflow-x-hidden">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/menu" element={<FullMenuPage />} />
