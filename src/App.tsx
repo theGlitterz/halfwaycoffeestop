@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Coffee, Menu as MenuIcon, MapPin, Clock, Instagram, Facebook,
+  Menu as MenuIcon, MapPin, Clock, Instagram, Facebook,
   Download, Phone, Mail, ChevronRight, ChevronLeft
 } from "lucide-react";
 import { Routes, Route, Link } from "react-router-dom";
