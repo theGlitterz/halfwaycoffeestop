@@ -353,51 +353,124 @@ const highlights = [
   { name: "Cold Brew", desc: "Slow & bold", price: "€3.90", img: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?q=80&w=1600&auto=format&fit=crop" },
 ];
 
-const MenuHighlights: React.FC = () => (
-  <section className="relative py-16">
-    <div className="absolute inset-0 -z-10 opacity-[0.06] [background:repeating-linear-gradient(90deg,rgba(0,0,0,0.6)_0_6px,transparent_6px_22px)]" />
-    <Container>
-      <Reveal>
-        <div className="flex items-end justify-between">
-          <h2 className="text-3xl sm:text-4xl font-bold" style={{ color: brand.coffee }}>Menu Highlights</h2>
-          <Link to="/menu" className="hidden sm:inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold"
-                style={{ borderColor: brand.pumpkin, color: brand.pumpkin }}>
+const MenuHighlights: React.FC = () => {
+  // 👇 Add ref + auto-scroll effect
+  const scrollRef = React.useRef<HTMLUListElement | null>(null);
+
+  React.useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    // Nudge right and back once
+    el.scrollTo({ left: 60, behavior: "smooth" });
+    const t = setTimeout(() => el.scrollTo({ left: 0, behavior: "smooth" }), 800);
+
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <section className="relative py-16">
+      <div className="absolute inset-0 -z-10 opacity-[0.06] [background:repeating-linear-gradient(90deg,rgba(0,0,0,0.6)_0_6px,transparent_6px_22px)]" />
+      <Container>
+        <Reveal>
+          <div className="flex items-end justify-between">
+            <h2 className="text-3xl sm:text-4xl font-bold" style={{ color: brand.coffee }}>
+              Menu Highlights
+            </h2>
+
+            <Link
+              to="/menu"
+              className="hidden sm:inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold"
+              style={{ borderColor: brand.pumpkin, color: brand.pumpkin }}
+            >
+              View full menu
+            </Link>
+
+            {/* Mobile-only swipe hint */}
+            <div className="flex items-center gap-2 text-sm text-neutral-500 sm:hidden">
+              <ChevronRight className="h-4 w-4 animate-pulse" />
+              <span>Swipe →</span>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* Edge-faded horizontal scroll section */}
+<div className="relative mt-6 rounded-3xl overflow-hidden">
+  {/* Left fade (brand cream) */}
+  <div
+    className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-10
+               bg-gradient-to-r from-[#F3E5D8] to-transparent"
+  />
+  {/* Right fade (brand cream) */}
+  <div
+    className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-10
+               bg-gradient-to-l from-[#F3E5D8] to-transparent"
+  />
+
+  {/* Scroll container (keeps smooth native scroll) */}
+  <div className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pb-2">
+    {/* Attach ref here for the auto-scroll nudge */}
+    <ul ref={scrollRef} className="flex items-start gap-6 pr-6 [scroll-snap-type:x_mandatory]">
+      {highlights.map((it) => (
+        <motion.li
+          key={it.name}
+          whileHover={{ y: -6 }}
+          className="relative shrink-0 w-[220px] sm:w-[260px] aspect-[3/4]
+                     rounded-3xl overflow-hidden border shadow-sm [scroll-snap-align:center]"
+          style={{ borderColor: brand.peach }}
+        >
+          <img src={it.img} alt={it.name} className="absolute inset-0 h-full w-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/15 to-transparent" />
+          {it.tag && (
+            <span
+              className="absolute left-3 top-3 rounded-full px-2 py-1 text-[11px] font-semibold text-white"
+              style={{ background: brand.pumpkin }}
+            >
+              {it.tag}
+            </span>
+          )}
+          <div
+            className="absolute bottom-3 left-3 right-3 flex items-center justify-between
+                       rounded-2xl bg-white/85 px-3 py-2 backdrop-blur-md shadow"
+          >
+            <div className="min-w-0">
+              <p className="truncate font-semibold" style={{ color: brand.coffee }}>
+                {it.name}
+              </p>
+              <p className="text-xs text-neutral-600 truncate">{it.desc}</p>
+            </div>
+            <span
+              className="ml-3 shrink-0 rounded-full px-3 py-1 text-xs font-semibold"
+              style={{
+                border: `1px solid ${brand.pumpkin}`,
+                color: brand.coffee,
+                background: brand.peach,
+              }}
+            >
+              {it.price}
+            </span>
+          </div>
+        </motion.li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+
+        <div className="mt-6 sm:hidden">
+          <Link
+            to="/menu"
+            className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold"
+            style={{ borderColor: brand.pumpkin, color: brand.pumpkin }}
+          >
             View full menu
           </Link>
         </div>
-      </Reveal>
+      </Container>
+    </section>
+  );
+};
 
-      <div className="mt-6 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        <ul className="flex gap-6 pr-6 [scroll-snap-type:x_mandatory]">
-          {highlights.map((it) => (
-            <motion.li key={it.name} whileHover={{ y: -6 }}
-              className="group relative w-[85vw] sm:w-[420px] lg:w-[520px] shrink-0 [scroll-snap-align:center] rounded-3xl overflow-hidden border shadow-sm"
-              style={{ borderColor: brand.peach }}>
-              <img src={it.img} alt={it.name} className="h-[260px] sm:h-[320px] w-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/15 to-transparent" />
-              {it.tag && <span className="absolute left-3 top-3 rounded-full px-2 py-1 text-[11px] font-semibold text-white" style={{ background: brand.pumpkin }}>{it.tag}</span>}
-              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between rounded-2xl bg-white/85 px-3 py-2 backdrop-blur-md shadow">
-                <div className="min-w-0">
-                  <p className="truncate font-semibold" style={{ color: brand.coffee }}>{it.name}</p>
-                  <p className="text-xs text-neutral-600 truncate">{it.desc}</p>
-                </div>
-                <span className="ml-3 shrink-0 rounded-full px-3 py-1 text-xs font-semibold" style={{ border: `1px solid ${brand.pumpkin}`, color: brand.coffee, background: brand.peach }}>
-                  {it.price}
-                </span>
-              </div>
-            </motion.li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="mt-6 sm:hidden">
-        <Link to="/menu" className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold" style={{ borderColor: brand.pumpkin, color: brand.pumpkin }}>
-          View full menu
-        </Link>
-      </div>
-    </Container>
-  </section>
-);
 
 /* ================= About ================= */
 const About: React.FC = () => (
