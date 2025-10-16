@@ -473,19 +473,119 @@ const MenuHighlights: React.FC = () => {
 
 
 /* ================= About ================= */
-const About: React.FC = () => (
-  <section id="about" className="py-20" style={{ background: brand.cream }}>
-    <Container>
-      <Reveal>
-        <h2 className="text-3xl sm:text-4xl font-bold" style={{ color: brand.coffee }}>Our Story</h2>
-        <p className="mt-4 max-w-3xl text-neutral-700">
-          Halfway Coffee Stop started as Tulia & Rhys’s drive-thru daydream: fast, friendly coffee that never cuts corners.
-          Today, our little container is a local ritual—where the team’s craft fuels your mornings.
-        </p>
-      </Reveal>
-    </Container>
-  </section>
-);
+/** About — Cinematic, modern, non-typical */
+const About: React.FC = () => {
+  const milestones = [
+    { k: "2023", t: "Barista course", d: "Tulia trains; falls in love with the craft." },
+    { k: "Week 1", t: "The takeover", d: "Owner exits—Tulia & Rhys step in." },
+    { k: "7 days", t: "Rebrand sprint", d: "New name, cups, signage—reopen in a week." },
+    { k: "6–4", t: "All-in grind", d: "7 days a week, 6–4—just the two of them." },
+    { k: "Today", t: "Halfway family", d: "4–5 crew; Waterford’s cozy drive-thru ritual." },
+  ];
+
+  return (
+    <section id="about" className="relative py-20">
+      {/* Subtle container ribs */}
+      <div className="absolute inset-0 -z-10 opacity-[0.08] [background:repeating-linear-gradient(90deg,rgba(0,0,0,0.6)_0_6px,transparent_6px_22px)]" />
+
+      <Container>
+        {/* Cinematic poster panel */}
+        <Reveal>
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+            {/* Poster */}
+            <div className="relative">
+              <div
+                className="aspect-[4/5] w-full overflow-hidden rounded-[28px] border shadow-xl"
+                style={{ borderColor: brand.peach, background: brand.cream }}
+              >
+                {/* Replace with Sora/exported still or hero photo */}
+                <img
+                  src="https://images.unsplash.com/photo-1512568400610-62da28bc8a13?q=80&w=1600&auto=format&fit=crop"
+                  alt="Halfway Coffee — inside the container"
+                  className="h-full w-full object-cover"
+                />
+                {/* Warm film wash */}
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(232,112,36,0.15),transparent_60%)] mix-blend-multiply" />
+                {/* Corner caption tag */}
+                <div className="absolute left-4 top-4 rounded-full bg-white/85 px-3 py-1 text-xs font-semibold backdrop-blur"
+                     style={{ color: brand.coffee, border: `1px solid ${brand.peach}` }}>
+                  Waterford • Drive-thru • Since 2023
+                </div>
+                {/* Signature badge */}
+                <div className="absolute bottom-4 right-4 rounded-2xl bg-white/90 px-4 py-2 text-sm font-semibold backdrop-blur shadow"
+                     style={{ color: brand.coffee }}>
+                  Halfway Coffee Stop
+                </div>
+              </div>
+            </div>
+
+            {/* Receipt-style story card */}
+            <div>
+              
+              <h2 className="text-3xl sm:text-4xl font-extrabold leading-tight" style={{ color: brand.coffee }}>
+                Our Journey - A week to rebrand. A city to serve.
+              </h2>
+              <p className="mt-3 text-neutral-700">
+                What started as a barista course turned into Waterford’s favourite quick stop. When the previous owner
+                moved on, Tulia & Rhys took the keys—and gave the container a new heartbeat in just seven days.
+              </p>
+
+              {/* “Receipt” card: modern, classy */}
+             <div className="mt-6 rounded-2xl border bg-[#FFF8F3] p-5 shadow-sm"
+     style={{ borderColor: brand.pumpkin, fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace" }}>
+
+                <div className="flex items-center justify-between">
+                  <span className="text-xs tracking-wider" style={{ color: brand.coffee }}>ORDER #0001</span>
+                  <span className="text-xs text-neutral-500">HALFWAY</span>
+                </div>
+                <div className="my-3 h-px bg-[repeating-linear-gradient(90deg,rgba(0,0,0,0.08)_0_10px,transparent_10px_20px)]" />
+                <ul className="space-y-2 text-sm">
+                  <li><b>Origin:</b> 2023 • Barista course → first shifts in this very container</li>
+                  <li><b>Turnaround:</b> 7 days to rename, reprint, restock—and reopen</li>
+                  <li><b>Hours:</b> 6–4, seven days, just two humans and a steam wand</li>
+                  <li><b>Today:</b> 4–5 crew, same cozy ritual—faster than your first chorus</li>
+                </ul>
+                <div className="mt-3 h-px bg-[repeating-linear-gradient(90deg,rgba(0,0,0,0.08)_0_10px,transparent_10px_20px)]" />
+                <div className="mt-2 flex items-center justify-between text-xs">
+                  <span className="text-neutral-500">Thank you, Waterford</span>
+                  <span className="font-semibold" style={{ color: brand.coffee }}>See you at the window →</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+
+        {/* Milestone rail — horizontal chips (scrollable with fades) */}
+        <Reveal delay={0.05}>
+          <div className="relative mt-10 rounded-3xl overflow-hidden">
+            {/* edge fades to hint scroll (match section bg = white; change if needed) */}
+            <div className="pointer-events-none absolute left-0 top-0 bottom-0 z-10 w-10 bg-gradient-to-r from-white to-transparent" />
+            <div className="pointer-events-none absolute right-0 top-0 bottom-0 z-10 w-10 bg-gradient-to-l from-white to-transparent" />
+
+            <div className="overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pb-2">
+              <div className="flex gap-4 pr-6 [scroll-snap-type:x_mandatory]">
+                {milestones.map((m) => (
+                  <motion.div
+                    key={m.k}
+                    whileHover={{ y: -4 }}
+                    className="shrink-0 [scroll-snap-align:start] rounded-2xl border bg-white px-4 py-3 shadow-sm"
+                    style={{ borderColor: brand.peach, minWidth: 220 }}
+                  >
+                    <div className="text-[11px] font-semibold uppercase tracking-wider"
+                         style={{ color: brand.pumpkin }}>{m.k}</div>
+                    <div className="mt-1 font-semibold" style={{ color: brand.coffee }}>{m.t}</div>
+                    <div className="text-sm text-neutral-600">{m.d}</div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </Container>
+    </section>
+  );
+};
+
 
 /* ================= Menu (compact tabs -> horizontal list) ================= */
 const Menu: React.FC = () => {
