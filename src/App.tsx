@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import { Routes, Route, Link } from "react-router-dom";
 import HalfwayLogo from "./assets/halfway-logo.png";
-
+import AboutPhoto from "./assets/tulia.jpeg";
 
 /* ================= Brand tokens ================= */
 const brand = {
@@ -472,206 +472,153 @@ const MenuHighlights: React.FC = () => {
 };
 
 
-/* ================= About ================= */
-/** About — Cinematic, modern, non-typical */
-const About: React.FC = () => {
-  const milestones = [
-    { k: "2023", t: "Barista course", d: "Tulia trains; falls in love with the craft." },
-    { k: "Week 1", t: "The takeover", d: "Owner exits—Tulia & Rhys step in." },
-    { k: "7 days", t: "Rebrand sprint", d: "New name, cups, signage—reopen in a week." },
-    { k: "6–4", t: "All-in grind", d: "7 days a week, 6–4—just the two of them." },
-    { k: "Today", t: "Halfway family", d: "4–5 crew; Waterford’s cozy drive-thru ritual." },
-  ];
+/* ================= About (poster + matching-height receipt) ================= */
+const About: React.FC = () => (
+  <section id="about" className="relative py-20">
+    {/* subtle ribs */}
+    <div className="absolute inset-0 -z-10 opacity-[0.08] [background:repeating-linear-gradient(90deg,rgba(0,0,0,0.6)_0_6px,transparent_6px_22px)]" />
 
-  return (
-    <section id="about" className="relative py-20">
-      {/* Subtle container ribs */}
-      <div className="absolute inset-0 -z-10 opacity-[0.08] [background:repeating-linear-gradient(90deg,rgba(0,0,0,0.6)_0_6px,transparent_6px_22px)]" />
+    <Container>
+      {/* SECTION HEADING — matches other sections */}
+      <Reveal>
+        <h2 className="text-3xl sm:text-4xl font-bold" style={{ color: brand.coffee }}>
+          Our Journey — A week to rebrand. A city to serve.
+        </h2>
+      </Reveal>
 
-      <Container>
-        {/* Cinematic poster panel */}
-        <Reveal>
-          <div className="grid items-stretch gap-10 lg:grid-cols-2">
-            {/* Poster */}
-            <div className="relative">
-              <div
-                className="aspect-[4/5] w-full overflow-hidden rounded-[28px] border shadow-xl"
-                style={{ borderColor: brand.peach, background: brand.cream }}
-              >
-                {/* Replace with Sora/exported still or hero photo */}
-                <img
-                  src="https://images.unsplash.com/photo-1512568400610-62da28bc8a13?q=80&w=1600&auto=format&fit=crop"
-                  alt="Halfway Coffee — inside the container"
-                  className="h-full w-full object-cover"
-                />
-                {/* Warm film wash */}
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(232,112,36,0.15),transparent_60%)] mix-blend-multiply" />
-                {/* Corner caption tag */}
-                <div className="absolute left-4 top-4 rounded-full bg-white/85 px-3 py-1 text-xs font-semibold backdrop-blur"
-                     style={{ color: brand.coffee, border: `1px solid ${brand.peach}` }}>
-                  Waterford • Drive-thru • Since 2023
-                </div>
-                {/* Signature badge */}
-                <div className="absolute bottom-4 right-4 rounded-2xl bg-white/90 px-4 py-2 text-sm font-semibold backdrop-blur shadow"
-                     style={{ color: brand.coffee }}>
-                  Halfway Coffee Stop
-                </div>
-              </div>
+      <Reveal delay={0.05}>
+        <div className="mt-6 grid items-start gap-10 lg:grid-cols-2">
+          {/* LEFT: Poster */}
+          <div className="aspect-[4/5] w-full">
+            <div
+              className="h-full w-full overflow-hidden rounded-[28px] border shadow-xl"
+              style={{ borderColor: brand.peach, background: brand.cream }}
+            >
+              <img
+                src={AboutPhoto}
+                alt="Halfway Coffee — inside the container"
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(232,112,36,0.15),transparent_60%)] mix-blend-multiply" />
             </div>
-{/* RIGHT: Tall receipt that matches the image height */}
-<div className="aspect-[4/5] w-full">
-  <div
-    className="relative h-full rounded-[28px] border bg-[#FFF8F3] p-5 sm:p-6 shadow-xl flex flex-col"
+          </div>
+
+  {/* Story receipt — THERMAL RECEIPT LOOK */}
+<div
+  className="relative mt-6 rounded-[28px] border shadow-xl overflow-hidden"
+  style={{ borderColor: brand.pumpkin, background: "#FFF9F1" }}
+>
+  {/* subtle paper gradient */}
+  <div className="absolute inset-0 pointer-events-none"
+       style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.02), transparent 120px)" }} />
+
+  {/* perforated left edge */}
+  {/* <div
+    className="absolute left-0 top-0 h-full w-6"
     style={{
-      borderColor: brand.pumpkin,
-      fontFamily:
-        "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+      background:
+        "repeating-radial-gradient(circle at 6px 8px, rgba(0,0,0,0.12) 0 2px, transparent 2px 22px)",
     }}
-  >
-    {/* Perforated top */}
-    <div
-      aria-hidden
-      className="pointer-events-none absolute left-0 right-0 top-0 h-3"
-      style={{
-        background:
-          "radial-gradient(circle at 10px 1.5px, #fff 2px, transparent 2.2px)",
-        backgroundSize: "20px 3px",
-        backgroundRepeat: "repeat-x",
-        transform: "translateY(-1px)",
-      }}
-    />
+  /> */}
 
-    {/* Header block */}
-        {/* Title inside the receipt (smaller for balance) */}
-    <h3
-      className="mt-3 text-lg sm:text-xl font-extrabold leading-snug"
-      style={{ color: brand.coffee }}
-    >
-      Our Journey — A week to rebrand. A city to serve.
-    </h3>
-    <div className="flex items-center justify-between">
-      <span className="text-[11px] tracking-wider" style={{ color: brand.coffee }}>
-        ORDER #0001
-      </span>
-      <span
-        className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
-        style={{ background: brand.peach, color: brand.coffee }}
-      >
-        HALFWAY
-      </span>
-    </div>
- 
-    <div className="mt-2 h-px w-16" style={{ background: brand.pumpkin }} />
+  {/* inner paper */}
+<div
+  className="relative mx-6 my-6 rounded-[16px] bg-white px-4 py-5 sm:px-7 sm:py-8"
+  style={{
+    // removed inset shadows to kill the faint lines
+    boxShadow: "none",
+    color: brand.coffee,
+    fontFamily:
+      "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
+  }}
+>
 
-   
-
-    {/* Dotted divider */}
-    <div className="my-3 h-px bg-[repeating-linear-gradient(90deg,rgba(0,0,0,0.08)_0_10px,transparent_10px_20px)]" />
-
-    {/* Rows with dotted leaders */}
-    <div className="space-y-3 text-[13px] leading-relaxed text-neutral-900">
-      {/* Row */}
-      <div className="flex items-baseline">
-        <span className="shrink-0 font-semibold" style={{ color: brand.coffee }}>
-          Origin
-        </span>
-        <span
-          className="mx-2 flex-1 h-[1px] translate-y-[2px]"
-          style={{
-            background:
-              "repeating-linear-gradient(90deg, rgba(0,0,0,.22) 0 6px, transparent 6px 12px)",
-          }}
-        />
-        <span className="shrink-0 text-right">
-          2023 → Barista course → shifts in this container
-        </span>
-      </div>
-
-      <div className="flex items-baseline">
-        <span className="shrink-0 font-semibold" style={{ color: brand.coffee }}>
-          Turnaround
-        </span>
-        <span
-          className="mx-2 flex-1 h-[1px] translate-y-[2px]"
-          style={{
-            background:
-              "repeating-linear-gradient(90deg, rgba(0,0,0,.22) 0 6px, transparent 6px 12px)",
-          }}
-        />
-        <span className="shrink-0 text-right">
-          7 days to rename, reprint, restock — reopen
-        </span>
-      </div>
-
-      <div className="flex items-baseline">
-        <span className="shrink-0 font-semibold" style={{ color: brand.coffee }}>
-          Hours (then)
-        </span>
-        <span
-          className="mx-2 flex-1 h-[1px] translate-y-[2px]"
-          style={{
-            background:
-              "repeating-linear-gradient(90deg, rgba(0,0,0,.22) 0 6px, transparent 6px 12px)",
-          }}
-        />
-        <span className="shrink-0 text-right">
-          6–4 • 7 days • two humans + a steam wand
-        </span>
-      </div>
-
-      <div className="flex items-baseline">
-        <span className="shrink-0 font-semibold" style={{ color: brand.coffee }}>
-          Today
-        </span>
-        <span
-          className="mx-2 flex-1 h-[1px] translate-y-[2px]"
-          style={{
-            background:
-              "repeating-linear-gradient(90deg, rgba(0,0,0,.22) 0 6px, transparent 6px 12px)",
-          }}
-        />
-        <span className="shrink-0 text-right">
-          4–5 crew • same cozy ritual • faster service
-        </span>
-      </div>
-    </div>
-
-    {/* Spacer grows to push footer to the bottom = tall/vertical feel */}
-    <div className="flex-1" />
-
-    {/* Footer line + barcode */}
-    <div className="my-3 h-px bg-[repeating-linear-gradient(90deg,rgba(0,0,0,0.08)_0_10px,transparent_10px_20px)]" />
-    <div className="flex items-center justify-between text-[11px]">
-      <span className="text-neutral-500">Thank you, Waterford</span>
-      <span className="font-semibold" style={{ color: brand.coffee }}>
-        See you at the window →
-      </span>
-    </div>
-    <div className="mt-3 h-8 w-32 bg-[repeating-linear-gradient(90deg,#1a1a1a_0_2px,transparent_2px_4px)] opacity-80" />
-
-    {/* Perforated bottom */}
-    <div
-      aria-hidden
-      className="pointer-events-none absolute left-0 right-0 bottom-0 h-3"
-      style={{
-        background:
-          "radial-gradient(circle at 10px 1.5px, #fff 2px, transparent 2.2px)",
-        backgroundSize: "20px 3px",
-        backgroundRepeat: "repeat-x",
-        transform: "translateY(1px) rotate(180deg)",
-      }}
-    />
-  </div>
+    {/* header */}
+    <div className="text-[13px] sm:text-[15px] font-extrabold uppercase tracking-[0.25em] text-center"
+     style={{ color: "#111" }}>
+  HALFWAY COFFEE STOP
+</div>
+<div className="mt-1 text-[11px] sm:text-[12px] font-semibold text-center"
+     style={{ color: "#222", letterSpacing: "0.12em" }}>
+  Waterford • Drive-Thru • Since 2023
 </div>
 
 
-          </div>
-        </Reveal>
-      </Container>
-    </section>
-  );
-};
+    {/* dashed rule */}
+    <div className="my-4 h-px bg-[repeating-linear-gradient(90deg,rgba(0,0,0,0.18)_0_8px,transparent_8px_16px)]" />
 
+    {/* story lines with “dot leader” to the value bits */}
+    <div className="space-y-3 text-[13px] leading-relaxed">
+      {/* line */}
+{/* ORIGIN */}
+<div className="flex items-baseline justify-between gap-3 text-[12px] sm:text-[13px] leading-relaxed py-[2px] border-b border-dotted border-neutral-300/60">
+  <span className="w-[36%] sm:w-[30%] shrink-0 font-semibold text-black uppercase tracking-wide">Origin</span>
+  <span className="w-[64%] sm:w-[70%] text-neutral-700 text-right break-words">Barista course → Start as employee</span>
+</div>
+
+{/* TURNAROUND */}
+<div className="flex items-baseline justify-between gap-3 text-[12px] sm:text-[13px] leading-relaxed py-[2px] border-b border-dotted border-neutral-300/60">
+  <span className="w-[36%] sm:w-[30%] shrink-0 font-semibold text-black uppercase tracking-wide">Turnaround</span>
+  <span className="w-[64%] sm:w-[70%] text-neutral-700 text-right break-words">7 days → Rename, Rebrand, Reopen</span>
+</div>
+
+{/* EARLY DAYS */}
+<div className="flex items-baseline justify-between gap-3 text-[12px] sm:text-[13px] leading-relaxed py-[2px] border-b border-dotted border-neutral-300/60">
+  <span className="w-[36%] sm:w-[30%] shrink-0 font-semibold text-black uppercase tracking-wide">Early Days</span>
+  <span className="w-[64%] sm:w-[70%] text-neutral-700 text-right break-words">6am–4pm shifts → Just Tulia & Rhys</span>
+</div>
+
+{/* TODAY */}
+<div className="flex items-baseline justify-between gap-3 text-[12px] sm:text-[13px] leading-relaxed py-[2px] border-b border-dotted border-neutral-300/60">
+  <span className="w-[36%] sm:w-[30%] shrink-0 font-semibold text-black uppercase tracking-wide">Today</span>
+  <span className="w-[64%] sm:w-[70%] text-neutral-700 text-right break-words">4–5 crew → Waterford’s cozy ritual</span>
+</div>
+
+{/* THANK YOU */}
+<div className="flex items-baseline justify-between gap-3 text-[12px] sm:text-[13px] leading-relaxed py-[2px] last:border-none">
+  <span className="w-[36%] sm:w-[30%] shrink-0 font-semibold text-black uppercase tracking-wide">Note</span>
+  <span className="w-[64%] sm:w-[70%] text-neutral-700 text-right break-words">Thank you, Waterford</span>
+</div>
+</div>
+
+    {/* dashed rule */}
+    <div className="my-4 h-px bg-[repeating-linear-gradient(90deg,rgba(0,0,0,0.18)_0_8px,transparent_8px_16px)]" />
+
+    {/* “total” style kicker */}
+    <div className="flex items-baseline text-[13px] font-semibold">
+      <span className="whitespace-nowrap font-semibold">Total</span>
+      <span className="mx-2 flex-1 border-b border-dotted border-neutral-400" />
+      <span className="whitespace-nowrap" style={{ color: brand.pumpkin }}>
+        Community, served daily
+      </span>
+    </div>
+
+    {/* tiny thank-you */}
+    <div className="mt-2 text-[11px] uppercase tracking-[0.12em] text-neutral-500 text-center">
+      Thank you, Waterford
+    </div>
+
+    {/* barcode */}
+    <div className="mt-6 grid place-items-center">
+      <svg width="220" height="44" viewBox="0 0 220 44" xmlns="http://www.w3.org/2000/svg">
+        <rect width="220" height="44" fill="#ffffff" />
+        {Array.from({ length: 32 }).map((_, i) => {
+          const x = 6 + i * 6;
+          const w = i % 3 === 0 ? 3 : i % 3 === 1 ? 2 : 1;
+          const h = i % 5 === 0 ? 34 : 28;
+          return <rect key={i} x={x} y={6} width={w} height={h} fill="#222222" />;
+        })}
+      </svg>
+      <div className="mt-1 text-[10px] tracking-[0.3em] text-neutral-500">H A L F W A Y</div>
+    </div>
+  </div>
+</div>
+
+        </div>
+      </Reveal>
+    </Container>
+  </section>
+);
 
 /* ================= Menu (compact tabs -> horizontal list) ================= */
 const Menu: React.FC = () => {
