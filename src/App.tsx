@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Menu as MenuIcon, MapPin, Clock, Instagram, Facebook,
-  Download, Phone, Mail, ChevronRight, ChevronLeft
+  Menu as MenuIcon, MapPin, Clock, Instagram,
+  Download, ChevronRight, ChevronLeft
 } from "lucide-react";
 import { Routes, Route, Link } from "react-router-dom";
 import HalfwayLogo from "./assets/halfway-logo.png";
@@ -796,7 +796,7 @@ const Visit: React.FC = () => {
   const email = "contact@halfwaycoffeestop.ie";
 
   // Build links (no API key needed)
-  const mapsQuery = encodeURIComponent(address);
+  // const mapsQuery = encodeURIComponent(address);
   // const mapsEmbedSrc = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
   // const mapsOpenLink = `https://maps.app.goo.gl/z2sq4srP9V1wgYts5`;
   // const telLink = `tel:${phone.replace(/\s+/g, "")}`;
