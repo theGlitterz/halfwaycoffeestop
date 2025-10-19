@@ -39,8 +39,49 @@ const FloatOnHover: React.FC<React.PropsWithChildren<{ amount?: number }>> = ({ 
 );
 
 /* ================= Nav ================= */
+/* ================= Nav ================= */
 const Nav: React.FC = () => {
   const [open, setOpen] = useState(false);
+useEffect(() => {
+  const onEsc = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+  window.addEventListener("keydown", onEsc);
+
+  if (open) {
+    // Lock background scroll and hide QuickDock
+    document.body.style.overflow = "hidden";
+    document.documentElement.classList.add("drawer-open");
+  } else {
+    document.body.style.overflow = "";
+    document.documentElement.classList.remove("drawer-open");
+  }
+
+  return () => {
+    window.removeEventListener("keydown", onEsc);
+    document.body.style.overflow = "";
+    document.documentElement.classList.remove("drawer-open");
+  };
+}, [open]);
+
+  // Close drawer on ESC (nice-to-have)
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+useEffect(() => {
+  if (open) {
+    document.body.style.overflow = "hidden";
+    document.documentElement.classList.add("drawer-open");
+  } else {
+    document.body.style.overflow = "";
+    document.documentElement.classList.remove("drawer-open");
+  }
+  return () => {
+    document.body.style.overflow = "";
+    document.documentElement.classList.remove("drawer-open");
+  };
+}, [open]);
+
   const links = [
     { href: "#home", label: "Home" },
     { href: "#about", label: "Our Story" },
@@ -48,55 +89,125 @@ const Nav: React.FC = () => {
     { href: "#gallery", label: "Gallery" },
     { href: "#visit", label: "Visit" },
   ];
+
   return (
-    // <nav className="fixed top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-white/50 bg-white/70 border-b border-black/5">
-<nav className="fixed top-0 z-50 w-full border-b border-black/5 bg-[#6d4b40] backdrop-blur-sm">
+    <nav className="fixed top-0 z-50 w-full border-b border-black/5 bg-[#6d4b40] backdrop-blur-sm">
       <Container className="flex h-16 items-center justify-between">
-       <a
-  href="#home"
-  className="flex h-16 items-center gap-2 shrink-0"   // full bar height
-  aria-label="Halfway Coffee Stop"
->
-  <img
-    src={HalfwayLogo}
-    alt="Halfway Coffee Stop"
-    width={1702}
-    height={1322}
-    className="block h-full max-h-[60px] w-auto object-contain " // fill height, leave 2px breathing room
-  />
-  <span className="sr-only">Halfway Coffee Stop</span>
-</a>
+        {/* Brand */}
+        <a
+          href="#home"
+          className="flex h-16 items-center gap-2 shrink-0"
+          aria-label="Halfway Coffee Stop"
+        >
+          <img
+            src={HalfwayLogo}
+            alt="Halfway Coffee Stop"
+            width={1702}
+            height={1322}
+            className="block h-full max-h-[60px] w-auto object-contain"
+          />
+          <span className="sr-only">Halfway Coffee Stop</span>
+        </a>
 
-
+        {/* Desktop nav + IG */}
         <div className="hidden md:flex items-center gap-6">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="text-sm font-medium text-[#F3E5D8] hover:text-[#E87024] transition-colors">{l.label}</a>
+            <a
+              key={l.href}
+              href={l.href}
+              className="text-sm font-medium text-[#F3E5D8] hover:text-[#E87024] transition-colors"
+            >
+              {l.label}
+            </a>
           ))}
-          <a href="#menu" className="rounded-full px-4 py-2 text-sm font-semibold text-white" style={{ backgroundColor: brand.pumpkin }}>
-            Order Ahead
+          {/* Desktop Instagram icon */}
+          <a
+            href="https://www.instagram.com/halfwaycoffeestop"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 rounded-full hover:bg-[#E87024]/10 transition"
+            aria-label="Follow us on Instagram"
+          >
+            <Instagram className="h-5 w-5 text-[#F3E5D8] hover:text-[#E87024]" />
           </a>
         </div>
-        <button className="md:hidden rounded-full p-2 border border-neutral-200" aria-label="Open Menu" onClick={() => setOpen((v) => !v)}>
-          <MenuIcon className="h-5 w-5" />
-        </button>
+
+        {/* Mobile: IG icon next to hamburger */}
+        <div className="md:hidden flex items-center gap-2">
+          <a
+            href="https://www.instagram.com/halfwaycoffeestop"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 rounded-full hover:bg-white/10 transition"
+            aria-label="Instagram"
+          >
+            <Instagram className="h-5 w-5 text-[#F3E5D8]" />
+          </a>
+
+          <button
+            className="rounded-full p-2 border border-white/20"
+            aria-label="Open Menu"
+            onClick={() => setOpen(true)}
+          >
+            <MenuIcon className="h-5 w-5 text-[#F3E5D8]" />
+          </button>
+        </div>
       </Container>
+
+      {/* Side drawer + overlay for mobile */}
       <AnimatePresence>
-        {open && (
-          <motion.div initial={{ height: 0 }} animate={{ height: "auto" }} exit={{ height: 0 }} className="md:hidden overflow-hidden border-t border-neutral-200 bg-white">
-            <Container className="flex flex-col py-2">
-              {links.map((l) => (
-                <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="py-2 text-neutral-800">{l.label}</a>
-              ))}
-              <a href="#menu" onClick={() => setOpen(false)} className="mt-2 rounded-full px-4 py-2 text-center font-semibold text-white" style={{ backgroundColor: brand.pumpkin }}>
-                Order Ahead
-              </a>
-            </Container>
-          </motion.div>
-        )}
-      </AnimatePresence>
+  {open && (
+    <>
+      {/* CLICK-TO-CLOSE OVERLAY */}
+      <motion.button
+        aria-label="Close menu"
+        className="fixed inset-0 z-[90] bg-black/50"   // high z so it sits above page
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={() => setOpen(false)}
+      />
+
+      {/* DRAWER PANEL */}
+      <motion.aside
+        className="fixed top-16 right-0 z-[100] h-[calc(100vh-4rem)] w-1/2 min-w-[280px] max-w-[92vw]
+                   border-l border-black/10 shadow-2xl
+                   bg-[#FFF7EF]/95 backdrop-blur-xl"
+        initial={{ x: "100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "100%" }}
+        transition={{ type: "tween", duration: 0.25 }}
+        onClick={(e) => e.stopPropagation()} // clicks inside drawer don't bubble to overlay
+      >
+        {/* optional soft glow */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(120% 60% at 100% 0%, rgba(232,112,36,0.12), transparent 60%)",
+          }}
+        />
+        <div className="relative h-full overflow-y-auto p-4">
+          {links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setOpen(false)}
+              className="block py-3 px-2 text-[15px] font-medium text-[#3A2A24] hover:text-[#E87024] transition-colors"
+            >
+              {l.label}
+            </a>
+          ))}
+        </div>
+      </motion.aside>
+    </>
+  )}
+</AnimatePresence>
+
     </nav>
   );
 };
+
 
 /* ================= Drive-thru status ================= */
 const DriveThruStatus: React.FC = () => {
@@ -369,7 +480,7 @@ const MenuHighlights: React.FC = () => {
   }, []);
 
   return (
-    <section className="relative py-16">
+        <section id="menu" className="relative py-16">
       <div className="absolute inset-0 -z-10 opacity-[0.06] [background:repeating-linear-gradient(90deg,rgba(0,0,0,0.6)_0_6px,transparent_6px_22px)]" />
       <Container>
         <Reveal>
@@ -482,7 +593,7 @@ const About: React.FC = () => (
       {/* SECTION HEADING — matches other sections */}
       <Reveal>
         <h2 className="text-3xl sm:text-4xl font-bold" style={{ color: brand.coffee }}>
-          Our Journey — A week to rebrand. A city to serve.
+          Our Journey — 7 Days. 2 People. 1 Dream
         </h2>
       </Reveal>
 
@@ -620,93 +731,7 @@ const About: React.FC = () => (
   </section>
 );
 
-/* ================= Menu (compact tabs -> horizontal list) ================= */
-const Menu: React.FC = () => {
-  const tabs = [
-    { name: "Coffee", items: [
-      { title: "Latte", desc: "Velvety + smooth", price: "€3.50" },
-      { title: "Cappuccino", desc: "Foamy classic", price: "€3.40" },
-      { title: "Pumpkin Spice Latte", desc: "Seasonal fave 🎃", price: "€4.10" },
-      { title: "Flat White", desc: "Silky & strong", price: "€3.60" },
-      { title: "Americano", desc: "Clean & classic", price: "€3.00" },
-    ]},
-    { name: "Iced", items: [
-      { title: "Iced Latte", desc: "Chilled comfort", price: "€3.70" },
-      { title: "Cold Brew", desc: "Slow & bold", price: "€3.90" },
-      { title: "Iced Mocha", desc: "Choco chill", price: "€4.20" },
-    ]},
-    { name: "Cakes & Bites", items: [
-      { title: "Cinnamon Roll", desc: "Sticky swirl", price: "€2.80" },
-      { title: "Banana Bread", desc: "Toasty slice", price: "€2.60" },
-      { title: "Brownie", desc: "Fudgy square", price: "€2.70" },
-    ]},
-  ];
-  const [active, setActive] = useState(0);
-  const [size, setSize] = useState<"S"|"M"|"L">("M");
-  return (
-    <section id="menu" className="py-20">
-      <Container>
-        <Reveal>
-          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-3xl sm:text-4xl font-bold" style={{ color: brand.coffee }}>Menu</h2>
-            <a href="/assets/menu.pdf" className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-white" style={{ backgroundColor: brand.pumpkin }}>
-              <Download className="h-4 w-4" /> Download PDF
-            </a>
-          </div>
-        </Reveal>
-        <Reveal delay={0.05}>
-          <div className="mt-6 flex flex-wrap items-center gap-3">
-            <div className="flex flex-wrap gap-2">
-              {tabs.map((t, i) => (
-                <button key={t.name} onClick={() => setActive(i)}
-                        className={`rounded-full border px-4 py-2 text-sm transition ${active === i ? "text-white" : "text-neutral-700"}`}
-                        style={{ backgroundColor: active === i ? brand.pumpkin : "transparent", borderColor: brand.pumpkin }}>
-                  {t.name}
-                </button>
-              ))}
-            </div>
-            <div className="ml-auto flex items-center gap-2 text-sm">
-              <span className="text-neutral-600">Size</span>
-              {(["S","M","L"] as const).map(s => (
-                <button key={s} onClick={() => setSize(s)}
-                        className={`rounded-full border px-3 py-1 ${size===s? "text-white" : "text-neutral-700"}`}
-                        style={{ backgroundColor: size===s? brand.coffee : "transparent", borderColor: brand.coffee }}>
-                  {s}
-                </button>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <div className="mt-8 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            <ul className="flex gap-4 pr-6 [scroll-snap-type:x_mandatory]">
-              {tabs[active].items.map((it) => (
-                <motion.li key={it.title} whileHover={{ y: -6 }}
-                           className="group w-[260px] shrink-0 [scroll-snap-align:start] rounded-2xl border bg-white p-5 shadow-sm">
-                  <div className="flex h-full flex-col justify-between">
-                    <div>
-                      <h3 className="font-semibold text-lg" style={{ color: brand.coffee }}>{it.title}</h3>
-                      <p className="text-sm text-neutral-600">{it.desc}</p>
-                      <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-neutral-600">
-                        <span className="rounded-full border px-2 py-1">{size} size</span>
-                        <span className="rounded-full border px-2 py-1">Oat milk +€0.40</span>
-                        <span className="rounded-full border px-2 py-1">Extra shot +€0.50</span>
-                      </div>
-                    </div>
-                    <div className="mt-4 flex items-center justify-between">
-                      <span className="rounded-full px-3 py-1 text-sm font-semibold" style={{ backgroundColor: brand.peach }}>{it.price}</span>
-                      <button className="rounded-full border px-3 py-1 text-xs" style={{ borderColor: brand.pumpkin }}>Add</button>
-                    </div>
-                  </div>
-                </motion.li>
-              ))}
-            </ul>
-          </div>
-        </Reveal>
-      </Container>
-    </section>
-  );
-};
+
 
 /* ================= Gallery ================= */
 const Gallery: React.FC = () => {
@@ -720,7 +745,13 @@ const Gallery: React.FC = () => {
   ];
   const [index, setIndex] = useState<number | null>(null);
   return (
-    <section id="gallery" className="py-20" style={{ background: brand.cream }}>
+<section
+  id="gallery"
+  className="relative py-20"
+>
+  {/* Subtle ribbed gradient background — matching “Our Journey” */}
+  <div className="absolute inset-0 -z-10 opacity-[0.08] [background:repeating-linear-gradient(90deg,rgba(0,0,0,0.6)_0_6px,transparent_6px_22px)]" />
+  <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,rgba(232,112,36,0.12),transparent_70%)]" />
       <Container>
         <Reveal><h2 className="text-3xl sm:text-4xl font-bold" style={{ color: brand.coffee }}>Gallery</h2></Reveal>
         <Reveal delay={0.05}>
@@ -757,88 +788,190 @@ const Gallery: React.FC = () => {
 };
 
 /* ================= Visit (with updated hours + map) ================= */
-const Visit: React.FC = () => (
-  <section id="visit" className="py-20">
-    <Container>
-      <Reveal><h2 className="text-3xl sm:text-4xl font-bold" style={{ color: brand.coffee }}>Visit Us</h2></Reveal>
-      <Reveal delay={0.05}>
-        <div className="mt-6 grid gap-6 lg:grid-cols-2">
-          <div className="rounded-2xl border p-6 bg-white shadow-sm">
-            <div className="flex items-start gap-3">
-              <MapPin className="mt-1 h-5 w-5" style={{ color: brand.pumpkin }} />
-              <div><p className="font-semibold">Find us here</p><p className="text-neutral-600">123 Container Lane, Your Town, Ireland</p></div>
-            </div>
-            <div className="mt-4 flex items-start gap-3">
-              <Clock className="mt-1 h-5 w-5" style={{ color: brand.pumpkin }} />
-              <div>
-                <p className="font-semibold">Opening Hours</p>
-                <ul className="mt-2 grid grid-cols-2 gap-y-1 text-sm text-neutral-700">
-                  <li>Mon–Fri</li><li>6:00 – 18:00</li>
-                  <li>Sat</li><li>9:00 – 15:00</li>
-                  <li>Sun</li><li>9:00 – 15:00</li>
-                </ul>
+/* ================= Visit (enhanced) ================= */
+const Visit: React.FC = () => {
+  // —— EDIT THIS ADDRESS ONCE ——
+  const address = "Tramore Road, Coolwager, Co. Waterford, X91 NNP0, Ireland";
+  const phone = "+353-830788439";
+  const email = "contact@halfwaycoffeestop.ie";
+
+  // Build links (no API key needed)
+  const mapsQuery = encodeURIComponent(address);
+  const mapsEmbedSrc = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
+  const mapsOpenLink = `https://maps.app.goo.gl/z2sq4srP9V1wgYts5`;
+  const telLink = `tel:${phone.replace(/\s+/g, "")}`;
+  const mailLink = `mailto:${email}`;
+
+  // Light “open/closed” indicator (same hours logic you use elsewhere)
+  const [isOpen, setIsOpen] = React.useState(false);
+  React.useEffect(() => {
+    const update = () => {
+      const now = new Date();
+      const day = now.getDay(); // 0 Sun - 6 Sat
+      const mins = now.getHours() * 60 + now.getMinutes();
+      let openNow = false;
+      if (day >= 1 && day <= 5) openNow = mins >= 6 * 60 && mins < 18 * 60; // Mon–Fri 6–18
+      else openNow = mins >= 9 * 60 && mins < 15 * 60;                      // Sat–Sun 9–15
+      setIsOpen(openNow);
+    };
+    update();
+    const id = setInterval(update, 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <section
+      id="visit"
+      className="relative py-20 overflow-hidden"
+      style={{
+        // Subtle pumpkin glow; no lines
+        backgroundImage:
+          "radial-gradient(1000px 460px at 50% -8%, rgba(232,112,36,0.22) 0%, rgba(232,112,36,0.12) 36%, rgba(255,255,255,1) 72%)",
+        backgroundColor: "#ffffff",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "100% 100%",
+      }}
+    >
+      <Container>
+        <Reveal><h2 className="text-3xl sm:text-4xl font-bold" style={{ color: brand.coffee }}>Visit Us</h2></Reveal>
+
+        <Reveal delay={0.05}>
+          <div className="mt-6 grid gap-6 lg:grid-cols-2">
+            {/* LEFT: Premium info card */}
+            <div
+              className="relative rounded-3xl border bg-white/90 p-6 shadow-xl backdrop-blur-sm"
+              style={{ borderColor: brand.peach }}
+            >
+              {/* corner status */}
+              <div className="absolute right-4 top-4">
+                <span
+                  className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold shadow-sm ${
+                    isOpen ? "bg-green-600 text-white" : "bg-neutral-300 text-neutral-800"
+                  }`}
+                >
+                  {isOpen ? "Open now" : "Closed"}
+                </span>
               </div>
+
+              {/* heading */}
+              <div className="flex items-start gap-3">
+                <div className="grid h-10 w-10 place-items-center rounded-xl"
+                     style={{ background: brand.peach, color: brand.coffee }}>
+                  <MapPin className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="font-semibold" style={{ color: brand.coffee }}>Halfway Coffee Stop</p>
+                  <p className="text-neutral-700">{address}</p>
+                </div>
+              </div>
+
+              {/* hours */}
+              <div className="mt-5 rounded-2xl border p-4"
+                   style={{ borderColor: brand.peach, background: "#FFFBF7" }}>
+                <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: brand.coffee }}>
+                  <Clock className="h-4 w-4" />
+                  Opening Hours
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-y-2 text-sm">
+                  <span className="text-neutral-600">Mon–Fri</span>
+                  <span className="justify-self-end font-medium" style={{ color: brand.coffee }}>6:00 – 18:00</span>
+                  <span className="text-neutral-600">Sat</span>
+                  <span className="justify-self-end font-medium" style={{ color: brand.coffee }}>9:00 – 15:00</span>
+                  <span className="text-neutral-600">Sun</span>
+                  <span className="justify-self-end font-medium" style={{ color: brand.coffee }}>9:00 – 15:00</span>
+                </div>
+              </div>
+
+              {/* actions */}
+              {/* Contact rows: show real info, still tappable */}
+{/* Contact info — minimal, elegant */}
+<div className="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-sm">
+  <div className="space-y-1 text-neutral-700">
+    <p>
+      <span className="font-semibold" style={{ color: brand.coffee }}>Phone:</span>{" "}
+      <a href="tel:+353830788439" className="hover:underline">
+        +353 830788439
+      </a>
+    </p>
+    <p>
+      <span className="font-semibold" style={{ color: brand.coffee }}>Email:</span>{" "}
+      <a href="mailto:contact@halfwaycoffeestop.ie" className="hover:underline">
+        contact@halfwaycoffeestop.ie
+      </a>
+    </p>
+  </div>
+
+  {/* <a
+    href="https://instagram.com/halfwaycoffeestop"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="inline-flex items-center justify-center rounded-full p-2 hover:bg-neutral-100 transition"
+    aria-label="Visit our Instagram"
+  >
+    <Instagram className="h-5 w-5" style={{ color: brand.pumpkin }} />
+  </a> */}
+</div>
+
+
             </div>
-            <div className="mt-4 flex items-center gap-4 text-sm">
-              <a href="https://instagram.com" className="inline-flex items-center gap-2 hover:underline"><Instagram className="h-4 w-4" /> Instagram</a>
-              <a href="https://facebook.com" className="inline-flex items-center gap-2 hover:underline"><Facebook className="h-4 w-4" /> Facebook</a>
-              <a href="tel:+3530000000" className="inline-flex items-center gap-2 hover:underline"><Phone className="h-4 w-4" /> Call</a>
-              <a href="mailto:hello@halfwaycoffee.com" className="inline-flex items-center gap-2 hover:underline"><Mail className="h-4 w-4" /> Email</a>
-            </div>
+
+            {/* RIGHT: Map embed (Google place) */}
+<div className="rounded-3xl overflow-hidden border shadow-xl" style={{ borderColor: brand.peach }}>
+  <iframe
+    title="Map: Halfway Coffee Stop (Drive Thru)"
+    className="h-[420px] w-full"
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2445.0599152162263!2d-7.119237322925865!3d52.20595867198056!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4842c300207360bf%3A0x36b75addcaaa2bda!2sHalfway%20Coffee%20Stop%20(Drive%20Thru)!5e0!3m2!1sen!2sin!4v1760841836009!5m2!1sen!2sin"
+    allowFullScreen
+    loading="lazy"
+    referrerPolicy="no-referrer-when-downgrade"
+  />
+</div>
+
           </div>
-          <div className="rounded-2xl overflow-hidden border">
-            <iframe title="Map" className="h-[360px] w-full" src="https://www.openstreetmap.org/export/embed.html?bbox=-10.85%2C51.39%2C-5.33%2C55.44&layer=mapnik" />
-          </div>
-        </div>
-      </Reveal>
-    </Container>
-  </section>
-);
+        </Reveal>
+      </Container>
+    </section>
+  );
+};
+
 
 /* ================= Loyalty ================= */
-const LoyaltyStamp: React.FC = () => (
-  <section className="py-12" style={{ background: brand.cream }}>
-    <Container>
-      <Reveal>
-        <div className="relative overflow-hidden rounded-3xl border bg-white p-6 shadow-sm">
-          <div className="absolute inset-0 opacity-[0.06] [background:repeating-linear-gradient(90deg,rgba(0,0,0,0.8)_0_6px,transparent_6px_20px)]" />
-          <div className="relative flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h3 className="text-2xl font-extrabold tracking-tight" style={{ color: brand.coffee }}>Loyalty Perks</h3>
-              <p className="mt-1 text-neutral-700">Powered by Square — <b>Get your 8th and 9th coffee free</b> when you’re a regular at Halfway ☕</p>
-            </div>
-            <a href="#" className="rounded-full px-4 py-2 text-sm font-semibold text-white" style={{ background: brand.pumpkin }}>Check your balance</a>
-          </div>
-        </div>
-      </Reveal>
-    </Container>
-  </section>
-);
+
 
 /* ================= Footer & QuickDock ================= */
+/* ================= Footer ================= */
 const Footer: React.FC = () => (
   <footer className="border-t py-10" style={{ background: brand.cream }}>
-    <Container className="flex flex-col items-center gap-3 text-center">
-      <p className="text-sm text-neutral-600">© {new Date().getFullYear()} Halfway Coffee Stop • Brewed with love</p>
-      <div className="flex items-center gap-4 text-sm">
-        <a href="#about" className="hover:underline">About</a>
-        <a href="#menu" className="hover:underline">Menu</a>
-        <a href="#gallery" className="hover:underline">Gallery</a>
-        <a href="#visit" className="hover:underline">Visit</a>
-      </div>
+    <Container className="flex flex-col items-center text-center gap-2">
+      <p className="text-sm text-neutral-700">
+        © {new Date().getFullYear()} Halfway Coffee Stop
+      </p>
+      <p className="text-sm text-neutral-600">
+        Made with ❤️  by{" "}
+        <a
+          href="https://glitterztech.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-semibold hover:text-[#E87024] transition-colors"
+          style={{ color: brand.coffee }}
+        >
+          GlitterzTech
+        </a>
+      </p>
     </Container>
   </footer>
 );
 
-const QuickDock: React.FC = () => (
-  <div className="fixed bottom-4 left-1/2 z-[60] -translate-x-1/2 md:hidden">
-    <div className="flex items-center gap-2 rounded-full border bg-white/90 px-3 py-2 shadow-xl backdrop-blur">
-      <a href="#menu" className="rounded-full border px-3 py-1 text-sm">Menu</a>
-      <a href="tel:+3530000000" className="rounded-full border px-3 py-1 text-sm">Call</a>
-      <a href="#visit" className="rounded-full border px-3 py-1 text-sm">Directions</a>
-    </div>
-  </div>
-);
+
+// const QuickDock: React.FC = () => (
+//   <div className="quickdock fixed bottom-4 left-1/2 z-[60] -translate-x-1/2 md:hidden">
+//     <div className="flex items-center gap-2 rounded-full border bg-white/90 px-3 py-2 shadow-xl backdrop-blur">
+//       <a href="#menu" className="rounded-full border px-3 py-1 text-sm">Menu</a>
+//       <a href="tel:+3530000000" className="rounded-full border px-3 py-1 text-sm">Call</a>
+//       <a href="#visit" className="rounded-full border px-3 py-1 text-sm">Directions</a>
+//     </div>
+//   </div>
+// );
 
 /* ================= Full Menu Page (route /menu) ================= */
 const FullMenuPage = () => {
@@ -943,12 +1076,10 @@ const HomePage: React.FC = () => (
     <HowToHalfwaySection />
     <MenuHighlights />
     <About />
-    <Menu />
     <Gallery />
     <Visit />
-    <LoyaltyStamp />
     <Footer />
-    <QuickDock />
+    {/* <QuickDock /> */}
   </>
 );
 

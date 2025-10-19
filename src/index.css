@@ -29,3 +29,5 @@ html, body, #root {
 html, body {
   overscroll-behavior-x: none;
 }
+/* Hide the floating QuickDock when the mobile drawer is open */
+.drawer-open .quickdock { display: none; }
