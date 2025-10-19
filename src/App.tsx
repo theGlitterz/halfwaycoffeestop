@@ -792,8 +792,8 @@ const Gallery: React.FC = () => {
 const Visit: React.FC = () => {
   // —— EDIT THIS ADDRESS ONCE ——
   const address = "Tramore Road, Coolwager, Co. Waterford, X91 NNP0, Ireland";
-  const phone = "+353-830788439";
-  const email = "contact@halfwaycoffeestop.ie";
+  // const phone = "+353-830788439";
+  // const email = "contact@halfwaycoffeestop.ie";
 
   // Build links (no API key needed)
   // const mapsQuery = encodeURIComponent(address);
