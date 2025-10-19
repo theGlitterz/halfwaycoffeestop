@@ -797,10 +797,10 @@ const Visit: React.FC = () => {
 
   // Build links (no API key needed)
   const mapsQuery = encodeURIComponent(address);
-  const mapsEmbedSrc = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
-  const mapsOpenLink = `https://maps.app.goo.gl/z2sq4srP9V1wgYts5`;
-  const telLink = `tel:${phone.replace(/\s+/g, "")}`;
-  const mailLink = `mailto:${email}`;
+  // const mapsEmbedSrc = `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
+  // const mapsOpenLink = `https://maps.app.goo.gl/z2sq4srP9V1wgYts5`;
+  // const telLink = `tel:${phone.replace(/\s+/g, "")}`;
+  // const mailLink = `mailto:${email}`;
 
   // Light “open/closed” indicator (same hours logic you use elsewhere)
   const [isOpen, setIsOpen] = React.useState(false);
