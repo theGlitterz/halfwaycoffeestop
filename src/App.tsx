@@ -5,7 +5,7 @@ import {
   Menu as MenuIcon, MapPin, Clock, Instagram,
   Download, ChevronRight, ChevronLeft
 } from "lucide-react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
 import HalfwayLogo from "./assets/halfway-logo.png";
 import AboutPhoto from "./assets/tulia.jpeg";
 
@@ -38,209 +38,253 @@ const FloatOnHover: React.FC<React.PropsWithChildren<{ amount?: number }>> = ({ 
   </motion.div>
 );
 
-/* ================= Nav ================= */
-/* ================= Nav ================= */
 const Nav: React.FC = () => {
-  const [open, setOpen] = useState(false);
-useEffect(() => {
-  const onEsc = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-  window.addEventListener("keydown", onEsc);
+  const [open, setOpen] = React.useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  if (open) {
-    // Lock background scroll and hide QuickDock
-    document.body.style.overflow = "hidden";
-    document.documentElement.classList.add("drawer-open");
-  } else {
-    document.body.style.overflow = "";
-    document.documentElement.classList.remove("drawer-open");
-  }
-
-  return () => {
-    window.removeEventListener("keydown", onEsc);
-    document.body.style.overflow = "";
-    document.documentElement.classList.remove("drawer-open");
+  // Smooth-scroll to in-page sections even from /menu
+  const goto = (hash: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    const scrollToHash = () => {
+      const el = document.querySelector(hash) as HTMLElement | null;
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(scrollToHash, 80);
+    } else {
+      scrollToHash();
+    }
+    // IMPORTANT: do NOT close the drawer on link click (per your request)
   };
-}, [open]);
 
-  // Close drawer on ESC (nice-to-have)
-  useEffect(() => {
+  // Close drawer on Esc
+  React.useEffect(() => {
+    if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
-useEffect(() => {
-  if (open) {
-    document.body.style.overflow = "hidden";
-    document.documentElement.classList.add("drawer-open");
-  } else {
-    document.body.style.overflow = "";
-    document.documentElement.classList.remove("drawer-open");
-  }
-  return () => {
-    document.body.style.overflow = "";
-    document.documentElement.classList.remove("drawer-open");
-  };
-}, [open]);
-
-  const links = [
-    { href: "#home", label: "Home" },
-    { href: "#about", label: "Our Story" },
-    { href: "#menu", label: "Menu" },
-    { href: "#gallery", label: "Gallery" },
-    { href: "#visit", label: "Visit" },
-  ];
+  }, [open]);
 
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-black/5 bg-[#6d4b40] backdrop-blur-sm">
-      <Container className="flex h-16 items-center justify-between">
-        {/* Brand */}
-        <a
-          href="#home"
-          className="flex h-16 items-center gap-2 shrink-0"
-          aria-label="Halfway Coffee Stop"
-        >
-          <img
-            src={HalfwayLogo}
-            alt="Halfway Coffee Stop"
-            width={1702}
-            height={1322}
-            className="block h-full max-h-[60px] w-auto object-contain"
-          />
-          <span className="sr-only">Halfway Coffee Stop</span>
-        </a>
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          {/* Logo */}
+          <a
+            href="/#home"
+            onClick={goto("#home")}
+            className="flex h-16 items-center gap-2 shrink-0"
+            aria-label="Halfway Coffee Stop"
+          >
+            <img
+              src={HalfwayLogo}
+              alt="Halfway Coffee Stop"
+              width={1702}
+              height={1322}
+              className="block h-full max-h-[60px] w-auto object-contain"
+            />
+            <span className="sr-only">Halfway Coffee Stop</span>
+          </a>
 
-        {/* Desktop nav + IG */}
-        <div className="hidden md:flex items-center gap-6">
-          {links.map((l) => (
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-6">
+            {[
+              { href: "#home", label: "Home" },
+              { href: "#about", label: "Our Story" },
+              { href: "#menu", label: "Menu" },
+              { href: "#gallery", label: "Gallery" },
+              { href: "#visit", label: "Visit" },
+            ].map((l) => (
+              <a
+                key={l.href}
+                href={`/${l.href}`}
+                onClick={goto(l.href)}
+                className="text-sm font-medium text-[#F3E5D8] hover:text-[#E87024] transition-colors"
+              >
+                {l.label}
+              </a>
+            ))}
+
+            {/* Instagram icon */}
             <a
-              key={l.href}
-              href={l.href}
-              className="text-sm font-medium text-[#F3E5D8] hover:text-[#E87024] transition-colors"
+              href="https://instagram.com/halfwaycoffeestop" /* update handle */
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center rounded-full p-2 hover:bg-white/10 transition"
+              aria-label="Instagram"
+              title="Instagram"
             >
-              {l.label}
+              <Instagram className="h-5 w-5 text-[#F3E5D8]" />
             </a>
-          ))}
-          {/* Desktop Instagram icon */}
-          <a
-            href="https://www.instagram.com/halfwaycoffeestop"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full hover:bg-[#E87024]/10 transition"
-            aria-label="Follow us on Instagram"
-          >
-            <Instagram className="h-5 w-5 text-[#F3E5D8] hover:text-[#E87024]" />
-          </a>
+          </div>
+
+          {/* Mobile: IG + burger */}
+          <div className="md:hidden flex items-center gap-2">
+            <a
+              href="https://instagram.com/halfwaycoffeestop"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center rounded-full p-2 hover:bg-white/10 transition"
+              aria-label="Instagram"
+            >
+              <Instagram className="h-5 w-5 text-[#F3E5D8]" />
+            </a>
+            <button
+              className="rounded-full p-2 border border-white/20"
+              aria-label="Open Menu"
+              onClick={() => setOpen(true)}
+            >
+              <MenuIcon className="h-5 w-5 text-[#F3E5D8]" />
+            </button>
+          </div>
         </div>
+      </div>
 
-        {/* Mobile: IG icon next to hamburger */}
-        <div className="md:hidden flex items-center gap-2">
-          <a
-            href="https://www.instagram.com/halfwaycoffeestop"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-2 rounded-full hover:bg-white/10 transition"
-            aria-label="Instagram"
-          >
-            <Instagram className="h-5 w-5 text-[#F3E5D8]" />
-          </a>
-
-          <button
-            className="rounded-full p-2 border border-white/20"
-            aria-label="Open Menu"
-            onClick={() => setOpen(true)}
-          >
-            <MenuIcon className="h-5 w-5 text-[#F3E5D8]" />
-          </button>
-        </div>
-      </Container>
-
-      {/* Side drawer + overlay for mobile */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
-  {open && (
-    <>
-      {/* CLICK-TO-CLOSE OVERLAY */}
-      <motion.button
-        aria-label="Close menu"
-        className="fixed inset-0 z-[90] bg-black/50"   // high z so it sits above page
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={() => setOpen(false)}
-      />
-
-      {/* DRAWER PANEL */}
-      <motion.aside
-        className="fixed top-16 right-0 z-[100] h-[calc(100vh-4rem)] w-1/2 min-w-[280px] max-w-[92vw]
-                   border-l border-black/10 shadow-2xl
-                   bg-[#FFF7EF]/95 backdrop-blur-xl"
-        initial={{ x: "100%" }}
-        animate={{ x: 0 }}
-        exit={{ x: "100%" }}
-        transition={{ type: "tween", duration: 0.25 }}
-        onClick={(e) => e.stopPropagation()} // clicks inside drawer don't bubble to overlay
-      >
-        {/* optional soft glow */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(120% 60% at 100% 0%, rgba(232,112,36,0.12), transparent 60%)",
-          }}
-        />
-        <div className="relative h-full overflow-y-auto p-4">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
+        {open && (
+          <>
+            {/* overlay – closes on outside click */}
+            <motion.button
+              aria-label="Close menu overlay"
+              className="fixed inset-0 z-[49] bg-black/40 backdrop-blur-[2px]"
               onClick={() => setOpen(false)}
-              className="block py-3 px-2 text-[15px] font-medium text-[#3A2A24] hover:text-[#E87024] transition-colors"
-            >
-              {l.label}
-            </a>
-          ))}
-        </div>
-      </motion.aside>
-    </>
-  )}
-</AnimatePresence>
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
 
+            {/* drawer panel */}
+            <motion.div
+              className="fixed right-0 top-0 z-[50] h-full w-[72%] max-w-sm
+                         border-l border-white/15 bg-white/85 backdrop-blur-md
+                         shadow-2xl"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 260, damping: 26 }}
+              role="dialog"
+              aria-modal="true"
+            >
+              <div className="px-5 pt-5 pb-3 flex items-center justify-between">
+                <span className="text-sm font-semibold text-neutral-700">Menu</span>
+                <button
+                  onClick={() => setOpen(false)}
+                  className="rounded-full px-3 py-1 text-sm border border-neutral-300 bg-white/70"
+                >
+                  Close
+                </button>
+              </div>
+              <div className="h-px bg-neutral-200/70" />
+
+              <div className="flex flex-col py-2">
+                {[
+                  { href: "#home", label: "Home" },
+                  { href: "#about", label: "Our Story" },
+                  { href: "#menu", label: "Menu" },
+                  { href: "#gallery", label: "Gallery" },
+                  { href: "#visit", label: "Visit" },
+                ].map((l) => (
+                  <a
+                    key={l.href}
+                    href={`/${l.href}`}
+                    onClick={goto(l.href)} // does NOT close the drawer
+                    className="px-5 py-3 text-base font-medium text-neutral-800 hover:bg-white"
+                  >
+                    {l.label}
+                  </a>
+                ))}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
 
 
-/* ================= Drive-thru status ================= */
+
+// ===== Drive-thru open/close with next boundary time =====
 const DriveThruStatus: React.FC = () => {
-  const [label, setLabel] = useState("Open now");
+  const [label, setLabel] = useState("…");
+
+  // 24h format: turn minutes since midnight into "HH:MM"
+  const toHHMM = (mins: number) => {
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    const hh = String(h).padStart(2, "0");
+    const mm = String(m).padStart(2, "0");
+    return `${hh}:${mm}`;
+  };
+
+  // Get schedule for a given weekday (0=Sun..6=Sat)
+  const getSchedule = (dayIdx: number) => {
+    // Mon–Fri: 06:00–18:00; Sat–Sun: 09:00–15:00
+    if (dayIdx >= 1 && dayIdx <= 5) return { open: 6 * 60, close: 18 * 60 };
+    return { open: 9 * 60, close: 15 * 60 };
+  };
+
+  const compute = () => {
+    const now = new Date();
+    const day = now.getDay(); // 0=Sun..6=Sat
+    const minsNow = now.getHours() * 60 + now.getMinutes();
+
+    const today = getSchedule(day);
+    const isOpen = minsNow >= today.open && minsNow < today.close;
+
+    if (isOpen) {
+      setLabel(`Open now — closes ${toHHMM(today.close)}`);
+      return;
+    }
+
+    // If we haven't opened yet today
+    if (minsNow < today.open) {
+      setLabel(`Closed — opens ${toHHMM(today.open)}`);
+      return;
+    }
+
+    // We’re past close today → find the next day’s open time
+    const nextDay = (day + 1) % 7;
+    const next = getSchedule(nextDay);
+    const tomorrowText = " (tomorrow)";
+    setLabel(`Closed — opens ${toHHMM(next.open)}${tomorrowText}`);
+  };
+
   useEffect(() => {
-    const update = () => {
-      const now = new Date();
-      const day = now.getDay(); // 0=Sun..6=Sat
-      const mins = now.getHours() * 60 + now.getMinutes();
-      let open = false;
-      // Mon–Fri: 6:00–18:00; Sat–Sun: 9:00–15:00
-      if (day >= 1 && day <= 5) open = mins >= 6 * 60 && mins < 18 * 60;
-      else open = mins >= 9 * 60 && mins < 15 * 60;
-      setLabel(open ? "Open now" : "Closed — see hours");
-    };
-    update();
-    const id = setInterval(update, 60000);
+    compute();
+    const id = setInterval(compute, 60 * 1000);
     return () => clearInterval(id);
   }, []);
-  const open = label.startsWith("Open");
+
+  const isOpen = label.startsWith("Open");
+
   return (
     <div className="sticky top-16 z-40 w-full border-b bg-white/80 backdrop-blur">
       <Container className="flex items-center gap-3 py-2 text-sm">
         <span className="relative inline-flex h-2.5 w-2.5">
-          <span className={`absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping ${open ? "bg-green-500" : "bg-neutral-400"}`} />
-          <span className={`relative inline-flex h-2.5 w-2.5 rounded-full ${open ? "bg-green-600" : "bg-neutral-500"}`} />
+          <span
+            className={`absolute inline-flex h-full w-full rounded-full opacity-75 animate-ping ${
+              isOpen ? "bg-green-500" : "bg-neutral-400"
+            }`}
+          />
+          <span
+            className={`relative inline-flex h-2.5 w-2.5 rounded-full ${
+              isOpen ? "bg-green-600" : "bg-neutral-500"
+            }`}
+          />
         </span>
         <span className="font-medium text-neutral-800">Drive-thru: {label}</span>
-        <span className="ml-auto hidden sm:block text-neutral-600">Queue friendly • Fresh cakes daily</span>
+        <span className="ml-auto hidden sm:block text-neutral-600">
+          Queue friendly • Fresh cakes daily
+        </span>
       </Container>
     </div>
   );
 };
+
 
 /* ================= Hero ================= */
 const Hero: React.FC = () => (
