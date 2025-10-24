@@ -2,12 +2,14 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Menu as MenuIcon, MapPin, Clock, Instagram,
+  Menu as MenuIcon, X, MapPin, Clock, Instagram,
   Download, ChevronRight, ChevronLeft
 } from "lucide-react";
 import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
 import HalfwayLogo from "./assets/halfway-logo.png";
 import AboutPhoto from "./assets/tulia.jpeg";
+import { createPortal } from "react-dom";
+
 
 /* ================= Brand tokens ================= */
 const brand = {
@@ -38,166 +40,218 @@ const FloatOnHover: React.FC<React.PropsWithChildren<{ amount?: number }>> = ({ 
   </motion.div>
 );
 
+/* ================= Nav ================= */
+/* ================= Nav ================= */
+/* ================= Nav (desktop + mobile drawer) ================= */
 const Nav: React.FC = () => {
-  const [open, setOpen] = React.useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
-  // Smooth-scroll to in-page sections even from /menu
-  const goto = (hash: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    const scrollToHash = () => {
-      const el = document.querySelector(hash) as HTMLElement | null;
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-    };
-    if (location.pathname !== "/") {
-      navigate("/");
-      setTimeout(scrollToHash, 80);
-    } else {
-      scrollToHash();
-    }
-    // IMPORTANT: do NOT close the drawer on link click (per your request)
-  };
-
-  // Close drawer on Esc
-  React.useEffect(() => {
+  // close on Esc
+  useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
+  const links = [
+    { href: "#home", label: "Home" },
+    { href: "#about", label: "Our Story" },
+    { href: "#gallery", label: "Gallery" },
+    { href: "#visit", label: "Visit" },
+    { href: "#menu", label: "Menu" },
+  ];
+
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-black/5 bg-[#6d4b40] backdrop-blur-sm">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
+      <Container className="flex h-16 items-center justify-between">
+        {/* Logo */}
+        <a href="#home" className="flex h-16 items-center gap-2 shrink-0" aria-label="Halfway Coffee Stop">
+          <img
+            src={HalfwayLogo}
+            alt="Halfway Coffee Stop"
+            width={1702}
+            height={1322}
+            className="block h-full max-h-[60px] w-auto object-contain"
+          />
+          <span className="sr-only">Halfway Coffee Stop</span>
+        </a>
+
+        {/* Desktop links */}
+        <div className="hidden md:flex items-center gap-6">
+          {links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className="text-sm font-medium text-[#F3E5D8] hover:text-[#E87024] transition-colors"
+            >
+              {l.label}
+            </a>
+          ))}
+          {/* Desktop Instagram */}
           <a
-            href="/#home"
-            onClick={goto("#home")}
-            className="flex h-16 items-center gap-2 shrink-0"
-            aria-label="Halfway Coffee Stop"
+            href="https://instagram.com/halfwaycoffeestop"
+            aria-label="Instagram"
+            className="inline-flex items-center justify-center rounded-full p-2 transition hover:scale-105"
+            style={{ background: "#E87024", color: "white" }}
           >
-            <img
-              src={HalfwayLogo}
-              alt="Halfway Coffee Stop"
-              width={1702}
-              height={1322}
-              className="block h-full max-h-[60px] w-auto object-contain"
-            />
-            <span className="sr-only">Halfway Coffee Stop</span>
+            <Instagram className="h-4 w-4" />
           </a>
-
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-6">
-            {[
-              { href: "#home", label: "Home" },
-              { href: "#about", label: "Our Story" },
-              { href: "#menu", label: "Menu" },
-              { href: "#gallery", label: "Gallery" },
-              { href: "#visit", label: "Visit" },
-            ].map((l) => (
-              <a
-                key={l.href}
-                href={`/${l.href}`}
-                onClick={goto(l.href)}
-                className="text-sm font-medium text-[#F3E5D8] hover:text-[#E87024] transition-colors"
-              >
-                {l.label}
-              </a>
-            ))}
-
-            {/* Instagram icon */}
-            <a
-              href="https://instagram.com/halfwaycoffeestop" /* update handle */
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full p-2 hover:bg-white/10 transition"
-              aria-label="Instagram"
-              title="Instagram"
-            >
-              <Instagram className="h-5 w-5 text-[#F3E5D8]" />
-            </a>
-          </div>
-
-          {/* Mobile: IG + burger */}
-          <div className="md:hidden flex items-center gap-2">
-            <a
-              href="https://instagram.com/halfwaycoffeestop"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-full p-2 hover:bg-white/10 transition"
-              aria-label="Instagram"
-            >
-              <Instagram className="h-5 w-5 text-[#F3E5D8]" />
-            </a>
-            <button
-              className="rounded-full p-2 border border-white/20"
-              aria-label="Open Menu"
-              onClick={() => setOpen(true)}
-            >
-              <MenuIcon className="h-5 w-5 text-[#F3E5D8]" />
-            </button>
-          </div>
         </div>
-      </div>
 
-      {/* Mobile Drawer */}
+        {/* Mobile: Instagram + Hamburger */}
+        <div className="md:hidden flex items-center gap-2">
+          <a
+            href="https://instagram.com/halfwaycoffeestop"
+            aria-label="Instagram"
+            className="rounded-full p-2 text-[#F3E5D8] hover:text-white transition"
+            title="Instagram"
+          >
+            <Instagram className="h-5 w-5" />
+          </a>
+          <button
+            aria-label="Open menu"
+            onClick={() => setOpen(true)}
+            className="rounded-full p-2 border border-[#F3E5D8]/30 text-[#F3E5D8] hover:text-white hover:border-white/50 transition"
+          >
+            <MenuIcon className="h-5 w-5" />
+          </button>
+        </div>
+      </Container>
+
+      {/* Overlay + Drawer */}
       <AnimatePresence>
         {open && (
           <>
-            {/* overlay – closes on outside click */}
-            <motion.button
-              aria-label="Close menu overlay"
-              className="fixed inset-0 z-[49] bg-black/40 backdrop-blur-[2px]"
+            {/* Dim overlay (click anywhere to close) */}
+            <motion.div
               onClick={() => setOpen(false)}
+              className="fixed inset-0 z-[150]"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              style={{ background: "rgba(0,0,0,0.42)" }}
             />
 
-            {/* drawer panel */}
-            <motion.div
-              className="fixed right-0 top-0 z-[50] h-full w-[72%] max-w-sm
-                         border-l border-white/15 bg-white/85 backdrop-blur-md
-                         shadow-2xl"
+            {/* Drawer panel */}
+            <motion.aside
+              role="dialog"
+              aria-modal="true"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 260, damping: 26 }}
-              role="dialog"
-              aria-modal="true"
+              transition={{ duration: 0.28, ease: "easeInOut" }}
+              className="fixed right-0 top-0 z-[200] h-screen w-[85vw] max-w-[360px] rounded-l-2xl shadow-2xl border-l"
+              style={{
+                background: "rgba(255,255,255,0.92)",
+                backdropFilter: "blur(14px)",
+                WebkitBackdropFilter: "blur(14px)",
+                borderColor: brand.peach,
+                color: "#3b2a24",
+              }}
+              // prevent clicks inside from closing
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="px-5 pt-5 pb-3 flex items-center justify-between">
-                <span className="text-sm font-semibold text-neutral-700">Menu</span>
+              {/* Drawer header */}
+              <div className="flex items-center justify-between px-5 pt-4 pb-2">
+                <div className="flex items-center gap-3">
+                  <div
+                    className="grid h-9 w-9 place-items-center rounded-lg"
+                    style={{ background: brand.peach, color: brand.coffee }}
+                  >
+                    {/* tiny coffee glyph */}
+                    <span className="text-sm">☕</span>
+                  </div>
+                  <div className="leading-tight">
+                    <div className="text-sm font-semibold" style={{ color: brand.coffee }}>
+                      Halfway Coffee Stop
+                    </div>
+                    <div className="text-[11px] text-neutral-600">Waterford • Drive-Thru</div>
+                  </div>
+                </div>
                 <button
+                  aria-label="Close menu"
                   onClick={() => setOpen(false)}
-                  className="rounded-full px-3 py-1 text-sm border border-neutral-300 bg-white/70"
+                  className="rounded-full p-2 text-neutral-700 hover:text-black hover:bg-black/5 transition"
                 >
-                  Close
+                  <X className="h-5 w-5" />
                 </button>
               </div>
-              <div className="h-px bg-neutral-200/70" />
 
-              <div className="flex flex-col py-2">
-                {[
-                  { href: "#home", label: "Home" },
-                  { href: "#about", label: "Our Story" },
-                  { href: "#menu", label: "Menu" },
-                  { href: "#gallery", label: "Gallery" },
-                  { href: "#visit", label: "Visit" },
-                ].map((l) => (
-                  <a
+              {/* Divider */}
+              <div className="mx-5 my-2 h-px bg-black/5" />
+
+              {/* Links list (stagger + subtle hover slide) */}
+              <motion.ul
+                className="px-2 py-1"
+                initial="hidden"
+                animate="show"
+                variants={{
+                  hidden: { transition: { staggerChildren: 0.04, staggerDirection: -1 } },
+                  show: { transition: { staggerChildren: 0.06 } },
+                }}
+              >
+                {links.map((l) => (
+                  <motion.li
                     key={l.href}
-                    href={`/${l.href}`}
-                    onClick={goto(l.href)} // does NOT close the drawer
-                    className="px-5 py-3 text-base font-medium text-neutral-800 hover:bg-white"
+                    variants={{ hidden: { opacity: 0, x: 10 }, show: { opacity: 1, x: 0 } }}
                   >
-                    {l.label}
-                  </a>
+                    <a
+                      href={l.href}
+                      onClick={() => setOpen(false)}
+                      className="group flex items-center justify-between rounded-xl px-4 py-3 text-[15px] font-medium"
+                      style={{ color: brand.coffee }}
+                    >
+                      <span>{l.label}</span>
+                      <ChevronRight
+                        className="h-4 w-4 text-neutral-400 transition group-hover:translate-x-0.5"
+                        aria-hidden
+                      />
+                    </a>
+                  </motion.li>
                 ))}
+              </motion.ul>
+
+              {/* Call to action / contact chips */}
+              <div className="mt-2 px-5">
+                <div
+                  className="rounded-2xl border p-3"
+                  style={{ borderColor: brand.peach, background: "rgba(255,255,255,0.75)" }}
+                >
+                  <div className="text-xs uppercase tracking-wider text-neutral-500">Contact</div>
+                  <div className="mt-2 space-y-1.5 text-sm">
+                    <a href="tel:+353 830788439" className="block hover:underline" style={{ color: brand.coffee }}>
+                      Phone — <span className="font-semibold">+353 830788439</span>
+                    </a>
+                    <a
+                      href="mailto:contact@halfwaycoffeestop.ie"
+                      className="block hover:underline"
+                      style={{ color: brand.coffee }}
+                    >
+                      Email — <span className="font-semibold">contact@halfwaycoffeestop.ie</span>
+                    </a>
+                  </div>
+                  {/* <div className="mt-3">
+                    <a
+                      href="https://instagram.com/halfwaycoffeestop"
+                      className="inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold transition hover:scale-[1.02]"
+                      style={{ background: brand.pumpkin, color: "white" }}
+                    >
+                      <Instagram className="h-4 w-4" />
+                      Follow us
+                    </a>
+                  </div> */}
+                </div>
               </div>
-            </motion.div>
+
+              {/* Drawer footer */}
+              <div className="mt-auto px-5 pb-5 pt-3 text-[11px] text-neutral-500">
+                Open Mon–Fri 6–18 • Sat–Sun 9–15
+              </div>
+            </motion.aside>
           </>
         )}
       </AnimatePresence>
