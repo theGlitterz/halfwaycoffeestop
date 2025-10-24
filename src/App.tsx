@@ -5,11 +5,9 @@ import {
   Menu as MenuIcon, X, MapPin, Clock, Instagram,
   Download, ChevronRight, ChevronLeft
 } from "lucide-react";
-import { Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import HalfwayLogo from "./assets/halfway-logo.png";
 import AboutPhoto from "./assets/tulia.jpeg";
-import { createPortal } from "react-dom";
-
 
 /* ================= Brand tokens ================= */
 const brand = {
