@@ -3,12 +3,12 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Menu as MenuIcon, X, MapPin, Clock, Instagram,
-  Download, ChevronRight, ChevronLeft
+  ChevronRight, ChevronLeft
 } from "lucide-react";
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route, Link, useLocation } from "react-router-dom";
 import HalfwayLogo from "./assets/halfway-logo.png";
 import AboutPhoto from "./assets/tulia.jpeg";
-
+import { MENU } from "./menu";
 /* ================= Brand tokens ================= */
 const brand = {
   coffee: "#5C4033",
@@ -43,6 +43,8 @@ const FloatOnHover: React.FC<React.PropsWithChildren<{ amount?: number }>> = ({ 
 /* ================= Nav (desktop + mobile drawer) ================= */
 const Nav: React.FC = () => {
   const [open, setOpen] = useState(false);
+const { pathname } = useLocation();
+const base = pathname === "/menu" ? "/" : "";
 
   // close on Esc
   useEffect(() => {
@@ -54,13 +56,15 @@ const Nav: React.FC = () => {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const links = [
-    { href: "#home", label: "Home" },
-    { href: "#about", label: "Our Story" },
-    { href: "#gallery", label: "Gallery" },
-    { href: "#visit", label: "Visit" },
-    { href: "#menu", label: "Menu" },
-  ];
+ const links = [
+  { href: `${base}#home`, label: "Home" },
+  { href: `${base}#about`, label: "Our Story" },
+  { href: `${base}#gallery`, label: "Gallery" },
+  { href: `${base}#visit`, label: "Visit" },
+  // "Menu" should point to the full menu page when you're not already there
+  { href: pathname === "/menu" ? "/menu" : "/menu", label: "Menu" },
+];
+
 
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-black/5 bg-[#6d4b40] backdrop-blur-sm">
@@ -549,15 +553,14 @@ const highlights = [
   {
     name: "Pumpkin Spice Latte",
     desc: "Seasonal, cozy spices",
-    price: "€4.10",
     img: "https://images.unsplash.com/photo-1512568400610-62da28bc8a13?q=80&w=1600&auto=format&fit=crop",
     tag: "Seasonal",
   },
-  { name: "Cinnamon Roll", desc: "Sticky swirl", price: "€2.80", img: "https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1600&auto=format&fit=crop" },
-  { name: "Iced Latte", desc: "Bright & chilled", price: "€3.70", img: "https://images.unsplash.com/photo-1517705008128-361805f42e86?q=80&w=1600&auto=format&fit=crop" },
-  { name: "Flat White", desc: "Silky & strong", price: "€3.60", img: "https://images.unsplash.com/photo-1453614512568-c4024d13c247?q=80&w=1600&auto=format&fit=crop" },
-  { name: "Banana Bread", desc: "Toasty slice", price: "€2.60", img: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1600&auto=format&fit=crop" },
-  { name: "Cold Brew", desc: "Slow & bold", price: "€3.90", img: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?q=80&w=1600&auto=format&fit=crop" },
+  { name: "Cinnamon Roll", desc: "Sticky swirl", img: "https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=1600&auto=format&fit=crop" },
+  { name: "Iced Latte", desc: "Bright & chilled", img: "https://images.unsplash.com/photo-1517705008128-361805f42e86?q=80&w=1600&auto=format&fit=crop" },
+  { name: "Flat White", desc: "Silky & strong", img: "https://images.unsplash.com/photo-1453614512568-c4024d13c247?q=80&w=1600&auto=format&fit=crop" },
+  { name: "Banana Bread", desc: "Toasty slice", img: "https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1600&auto=format&fit=crop" },
+  { name: "Cold Brew", desc: "Slow & bold", img: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?q=80&w=1600&auto=format&fit=crop" },
 ];
 
 const MenuHighlights: React.FC = () => {
@@ -637,7 +640,7 @@ const MenuHighlights: React.FC = () => {
             </span>
           )}
           <div
-            className="absolute bottom-3 left-3 right-3 flex items-center justify-between
+className="absolute bottom-3 left-3 right-3 flex items-center justify-start
                        rounded-2xl bg-white/85 px-3 py-2 backdrop-blur-md shadow"
           >
             <div className="min-w-0">
@@ -646,16 +649,7 @@ const MenuHighlights: React.FC = () => {
               </p>
               <p className="text-xs text-neutral-600 truncate">{it.desc}</p>
             </div>
-            <span
-              className="ml-3 shrink-0 rounded-full px-3 py-1 text-xs font-semibold"
-              style={{
-                border: `1px solid ${brand.pumpkin}`,
-                color: brand.coffee,
-                background: brand.peach,
-              }}
-            >
-              {it.price}
-            </span>
+           
           </div>
         </motion.li>
       ))}
@@ -1071,19 +1065,47 @@ const Footer: React.FC = () => (
 
 /* ================= Full Menu Page (route /menu) ================= */
 const FullMenuPage = () => {
-  const items = [
-    { cat: "Coffee", name: "Latte", price: "€3.50", imageUrl: "https://placehold.co/80x80/5C4033/F3E5D8?text=Latte" },
-    { cat: "Coffee", name: "Cappuccino", price: "€3.40", imageUrl: "https://placehold.co/80x80/5C4033/F3E5D8?text=Capuccino" },
-    { cat: "Coffee", name: "Flat White", price: "€3.60", imageUrl: "https://placehold.co/80x80/5C4033/F3E5D8?text=Flat+White" },
-    { cat: "Coffee", name: "Americano", price: "€3.00", imageUrl: "https://placehold.co/80x80/5C4033/F3E5D8?text=Americano" },
-    { cat: "Seasonal", name: "Pumpkin Spice Latte", price: "€4.10", imageUrl: "https://placehold.co/80x80/E87024/FFFFFF?text=PSL" },
-    { cat: "Iced", name: "Iced Latte", price: "€3.70", imageUrl: "https://placehold.co/80x80/8CA78B/FFFFFF?text=Iced+Latte" },
-    { cat: "Iced", name: "Cold Brew", price: "€3.90", imageUrl: "https://placehold.co/80x80/8CA78B/FFFFFF?text=Cold+Brew" },
-    { cat: "Iced", name: "Iced Mocha", price: "€4.20", imageUrl: "https://placehold.co/80x80/8CA78B/FFFFFF?text=Iced+Mocha" },
-    { cat: "Bites", name: "Cinnamon Roll", price: "€2.80", imageUrl: "https://placehold.co/80x80/F7E1CF/5C4033?text=Roll" },
-    { cat: "Bites", name: "Banana Bread", price: "€2.60", imageUrl: "https://placehold.co/80x80/F7E1CF/5C4033?text=Bread" },
-    { cat: "Bites", name: "Brownie", price: "€2.70", imageUrl: "https://placehold.co/80x80/F7E1CF/5C4033?text=Brownie" },
+   const [active, setActive] = React.useState<string>("all");
+const [query, setQuery] = React.useState("");
+
+  const filters = [
+    { id: "all", label: "All menu items" },
+    { id: "coffee", label: "Hot Drinks" },
+    { id: "cold-drinks", label: "Cold Drinks" },
+    { id: "food", label: "Food" },
+    { id: "snacks", label: "Snacks" },
   ];
+const categoryColor: Record<string, string> = {
+  coffee: brand.pumpkin,
+  "cold-drinks": brand.sage,
+  food: brand.coffee,
+  snacks: "#B08968",
+};
+
+ 
+
+  const visibleCategories = active === "all" ? MENU : MENU.filter((c) => c.id === active);
+
+  const visibleItems = visibleCategories.flatMap((cat) =>
+    cat.items
+      .filter((i) => i.available !== false)
+    .map((item) => ({
+  ...item,
+  catId: cat.id,
+  catTitle: cat.title,
+}))
+
+
+  );
+const q = query.trim().toLowerCase();
+
+const filteredItems = q
+  ? visibleItems.filter((it) => {
+      const hay = `${it.name} ${it.description ?? ""}`.toLowerCase();
+      return hay.includes(q);
+    })
+  : visibleItems;
+
 
   return (
     <div className="min-h-screen bg-white">
@@ -1096,49 +1118,198 @@ const FullMenuPage = () => {
               <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: brand.coffee }}>
                 Full Menu
               </h1>
-              <a
-                href="/assets/menu.pdf"
-                className="hidden sm:inline-flex items-center gap-2 rounded-full px-4 py-2 text-white"
-                style={{ backgroundColor: brand.pumpkin }}
-              >
-                <Download className="h-4 w-4" /> Download PDF
-              </a>
+             
             </div>
           </Reveal>
 
-          <Reveal delay={0.05}>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {items.map((it) => (
-                <div
-                  key={`${it.cat}-${it.name}`}
-                  className="rounded-2xl border bg-white p-4 shadow-lg flex items-center gap-4 transition hover:shadow-xl"
-                  style={{ borderColor: brand.peach }}
+       <Reveal delay={0.05}>
+  <div className="mt-8 grid gap-8 md:grid-cols-[260px_1fr]">
+    {/* LEFT: FILTER */}
+    <aside className="md:sticky md:top-28 h-fit">
+      <div
+        className="rounded-2xl border bg-white p-4 shadow-sm"
+        style={{ borderColor: brand.peach }}
+      >
+        <p className="text-xs font-semibold uppercase tracking-wider text-neutral-500">
+          Filter
+        </p>
+
+        {/* Desktop filter list */}
+        <div className="mt-3 hidden md:flex flex-col gap-2">
+          {filters.map((f) => {
+            const isActive = active === f.id;
+            return (
+              <button
+                key={f.id}
+onClick={() => {
+  setActive(f.id);
+  setQuery("");
+}}
+                className="w-full rounded-xl px-3 py-2 text-left text-sm font-semibold transition"
+               style={{
+  background: isActive
+    ? `${categoryColor[f.id] ?? brand.peach}1A` // very soft tint
+    : "transparent",
+  color: brand.coffee,
+  border: `1px solid ${
+    isActive ? categoryColor[f.id] ?? brand.pumpkin : "rgba(0,0,0,0.06)"
+  }`,
+}}
+
+              >
+                {f.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Mobile: filter chips */}
+        <div className="mt-3 md:hidden overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex gap-2 pr-2">
+            {filters.map((f) => {
+              const isActive = active === f.id;
+              return (
+                <button
+                  key={f.id}
+                  onClick={() => setActive(f.id)}
+                  className="shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition"
+                  style={{
+                    background: isActive ? brand.pumpkin : brand.peach,
+                    color: isActive ? "white" : brand.coffee,
+                    border: `1px solid ${brand.pumpkin}`,
+                  }}
                 >
-                    {/* Image on the left */}
-                    <img 
-                      src={it.imageUrl} 
-                      alt={it.name} 
-                      className="h-16 w-16 object-cover rounded-xl shadow-inner border shrink-0"
-                      style={{ borderColor: brand.peach }}
-                    />
-                    
-                    {/* Item details in the middle */}
-                    <div className="flex-grow min-w-0">
-                      <p className="text-xs uppercase tracking-widest font-medium" style={{ color: brand.pumpkin }}>{it.cat}</p>
-                      <p className="truncate text-lg font-bold" style={{ color: brand.coffee }}>{it.name}</p>
-                    </div>
-                    
-                    {/* Price on the right */}
-                    <span 
-                      className="shrink-0 rounded-full px-4 py-1 text-base font-bold text-white" 
-                      style={{ backgroundColor: brand.pumpkin }}
-                    >
-                      {it.price}
-                    </span>
-                </div>
-              ))}
-            </div>
-          </Reveal>
+                  {f.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    {/* RIGHT: ITEMS */}
+    <div>
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+  <div>
+    <h2 className="text-xl font-bold" style={{ color: brand.coffee }}>
+      {filters.find((f) => f.id === active)?.label || "Menu"}
+    </h2>
+    <p className="mt-1 text-sm text-neutral-600">
+      {filteredItems.length} items
+      {query.trim() ? (
+        <span className="text-neutral-500"> • matching “{query.trim()}”</span>
+      ) : null}
+    </p>
+  </div>
+
+  {/* Search */}
+  <div className="w-full sm:w-[320px]">
+    <label className="sr-only" htmlFor="menu-search">Search menu</label>
+    <div
+      className="flex items-center gap-2 rounded-full border bg-white px-4 py-2 shadow-sm"
+      style={{ borderColor: brand.peach }}
+    >
+      <span aria-hidden="true">🔎</span>
+      <input
+        id="menu-search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search menu… (e.g. latte, brownie)"
+        className="w-full bg-transparent text-sm outline-none placeholder:text-neutral-400"
+        style={{ color: brand.coffee }}
+      />
+      {query.trim() ? (
+        <button
+          type="button"
+          onClick={() => setQuery("")}
+          className="rounded-full px-2 py-1 text-xs font-semibold"
+          style={{ background: brand.peach, color: brand.coffee }}
+          aria-label="Clear search"
+        >
+          Clear
+        </button>
+      ) : null}
+    </div>
+  </div>
+</div>
+
+{filteredItems.length === 0 ? (
+  <div
+    className="rounded-2xl border bg-white p-6 text-sm text-neutral-600"
+    style={{ borderColor: brand.peach }}
+  >
+    No items found. Try a different search term.
+  </div>
+) : null}
+
+ <div className="grid gap-3 sm:gap-4 md:grid-cols-2">
+  {filteredItems.map((it) => (
+    <div
+      key={`${it.catId}-${it.id}`}
+     className="rounded-xl border bg-white px-3 py-3 shadow-sm transition hover:bg-black/[0.02]"
+style={{ borderColor: brand.peach }}
+
+    >
+      <div className="flex items-start gap-3">
+  {/* Accent dot */}
+  <div
+    className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full"
+    style={{
+      background:
+        it.catId === "coffee"
+          ? brand.pumpkin
+          : it.catId === "cold-drinks"
+          ? brand.sage
+          : it.catId === "food"
+          ? brand.coffee
+          : "#B08968",
+      opacity: 0.9,
+    }}
+    aria-hidden="true"
+  />
+
+  {/* Text */}
+  <div className="min-w-0 flex-1">
+    <p className="text-[15px] font-semibold leading-snug" style={{ color: brand.coffee }}>
+      {it.name}
+    </p>
+
+    {/* Only show description if present */}
+    {it.description ? (
+      <p className="mt-0.5 text-[13px] leading-snug text-neutral-600">
+        {it.description}
+      </p>
+    ) : null}
+  </div>
+
+  {/* Right-side subtle “status” for balance */}
+  {it.tags?.length ? (
+  <span
+    className="shrink-0 rounded-full px-2 py-1 text-[11px] font-semibold"
+    style={{
+      background: "rgba(247,225,207,0.75)",
+      color: brand.coffee,
+      border: "1px solid rgba(0,0,0,0.04)",
+    }}
+  >
+    {it.tags[0]}
+  </span>
+) : (
+  /* Invisible spacer to keep alignment consistent */
+  <span className="shrink-0 w-[48px]" aria-hidden="true" />
+)}
+
+</div>
+
+    </div>
+  ))}
+</div>
+
+</div>
+  </div>
+</Reveal>
+
 
           <div className="mt-8 flex items-center justify-between">
             <Link
@@ -1148,13 +1319,7 @@ const FullMenuPage = () => {
             >
               ← Back to home
             </Link>
-            <a
-              href="/assets/menu.pdf"
-              className="sm:hidden rounded-full px-4 py-2 text-sm font-semibold text-white"
-              style={{ backgroundColor: brand.pumpkin }}
-            >
-              Download PDF
-            </a>
+          
           </div>
         </Container>
       </section>
