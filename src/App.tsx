@@ -62,7 +62,7 @@ const base = pathname === "/menu" ? "/" : "";
   { href: `${base}#gallery`, label: "Gallery" },
   { href: `${base}#visit`, label: "Visit" },
   // "Menu" should point to the full menu page when you're not already there
-  { href: pathname === "/menu" ? "/menu" : "/menu", label: "Menu" },
+{ href: "/#menu", label: "Menu" },
 ];
 
 
