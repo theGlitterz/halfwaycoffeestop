@@ -1111,8 +1111,8 @@ const filteredItems = q
     <div className="min-h-screen bg-white">
       <Nav />
       <DriveThruStatus />
-      <section className="py-16">
-        <Container>
+<section className="py-16 overflow-x-hidden">
+<Container className="overflow-x-hidden">
           <Reveal>
             <div className="flex items-end justify-between">
               <h1 className="text-3xl sm:text-4xl font-bold" style={{ color: brand.coffee }}>
@@ -1123,9 +1123,9 @@ const filteredItems = q
           </Reveal>
 
        <Reveal delay={0.05}>
-  <div className="mt-8 grid gap-8 md:grid-cols-[260px_1fr]">
+<div className="mt-8 grid gap-6 md:grid-cols-[260px_1fr] w-full max-w-full">
     {/* LEFT: FILTER */}
-    <aside className="md:sticky md:top-28 h-fit">
+<aside className="md:sticky md:top-28 h-fit min-w-0 w-full max-w-full">
       <div
         className="rounded-2xl border bg-white p-4 shadow-sm"
         style={{ borderColor: brand.peach }}
@@ -1164,32 +1164,37 @@ onClick={() => {
         </div>
 
         {/* Mobile: filter chips */}
-        <div className="mt-3 md:hidden overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <div className="flex gap-2 pr-2">
-            {filters.map((f) => {
-              const isActive = active === f.id;
-              return (
-                <button
-                  key={f.id}
-                  onClick={() => setActive(f.id)}
-                  className="shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition"
-                  style={{
-                    background: isActive ? brand.pumpkin : brand.peach,
-                    color: isActive ? "white" : brand.coffee,
-                    border: `1px solid ${brand.pumpkin}`,
-                  }}
-                >
-                  {f.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
+      <div className="mt-3 md:hidden">
+  <div className="flex flex-wrap gap-2">
+    {filters.map((f) => {
+      const isActive = active === f.id;
+      return (
+        <button
+          key={f.id}
+          onClick={() => {
+            setActive(f.id);
+            setQuery("");
+          }}
+          className="rounded-full px-4 py-2 text-sm font-semibold transition"
+          style={{
+            background: isActive ? brand.pumpkin : brand.peach,
+            color: isActive ? "white" : brand.coffee,
+            border: `1px solid ${brand.pumpkin}`,
+          }}
+        >
+          {f.label}
+        </button>
+      );
+    })}
+  </div>
+</div>
+
       </div>
     </aside>
 
     {/* RIGHT: ITEMS */}
-    <div>
+   <div className="min-w-0">
+
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
   <div>
     <h2 className="text-xl font-bold" style={{ color: brand.coffee }}>
@@ -1204,7 +1209,7 @@ onClick={() => {
   </div>
 
   {/* Search */}
-  <div className="w-full sm:w-[320px]">
+<div className="w-full sm:w-[320px] min-w-0">
     <label className="sr-only" htmlFor="menu-search">Search menu</label>
     <div
       className="flex items-center gap-2 rounded-full border bg-white px-4 py-2 shadow-sm"
