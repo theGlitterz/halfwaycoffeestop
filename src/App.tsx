@@ -8,6 +8,7 @@ import {
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import HalfwayLogo from "./assets/halfway-logo.png";
 import AboutPhoto from "./assets/tulia.jpeg";
+import GlitterzLogo from "./assets/glitterztech-logo.png";
 import { MENU } from "./menu";
 /* ================= Brand tokens ================= */
 const brand = {
@@ -588,13 +589,14 @@ const MenuHighlights: React.FC = () => {
               Menu Highlights
             </h2>
 
-            <Link
-              to="/menu"
-              className="hidden sm:inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold"
-              style={{ borderColor: brand.pumpkin, color: brand.pumpkin }}
-            >
-              View full menu
-            </Link>
+           <Link
+  to="/#/menu"
+  className="hidden sm:inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold"
+  style={{ borderColor: brand.pumpkin, color: brand.pumpkin }}
+>
+  View full menu
+</Link>
+
 
             {/* Mobile-only swipe hint */}
             <div className="flex items-center gap-2 text-sm text-neutral-500 sm:hidden">
@@ -1036,18 +1038,23 @@ const Footer: React.FC = () => (
       <p className="text-sm text-neutral-700">
         © {new Date().getFullYear()} Halfway Coffee Stop
       </p>
-      <p className="text-sm text-neutral-600">
-        Made with ❤️  by{" "}
-        <a
-          href="https://glitterztech.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-semibold hover:text-[#E87024] transition-colors"
-          style={{ color: brand.coffee }}
-        >
-          GlitterzTech
-        </a>
-      </p>
+      <p className="text-sm text-neutral-600 flex items-center gap-2">
+  Made with ❤️ by
+  <a
+    href="https://glitterztech.com"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="GlitterzTech"
+    className="inline-flex items-center hover:opacity-80 transition"
+  >
+    <img
+      src={GlitterzLogo}
+      alt="GlitterzTech"
+      className="h-7 w-auto object-contain"
+    />
+  </a>
+</p>
+
     </Container>
   </footer>
 );
