@@ -589,14 +589,13 @@ const MenuHighlights: React.FC = () => {
               Menu Highlights
             </h2>
 
-           <Link
-  to="/#/menu"
-  className="hidden sm:inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold"
-  style={{ borderColor: brand.pumpkin, color: brand.pumpkin }}
->
-  View full menu
-</Link>
-
+            <Link
+              to="/menu"
+              className="hidden sm:inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold"
+              style={{ borderColor: brand.pumpkin, color: brand.pumpkin }}
+            >
+              View full menu
+            </Link>
 
             {/* Mobile-only swipe hint */}
             <div className="flex items-center gap-2 text-sm text-neutral-500 sm:hidden">
